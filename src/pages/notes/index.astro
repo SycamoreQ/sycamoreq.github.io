@@ -27,7 +27,6 @@ const tags = [...tagCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   <h1>writing</h1>
 
   <div class="notes-layout">
-    <!-- ── Post list ──────────────────────────────────── -->
     <div class="post-list" id="post-list">
       {notes.map((note) => (
         <a
@@ -42,13 +41,12 @@ const tags = [...tagCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
           </div>
         </a>
       ))}
-      <!-- shown when no notes match the active filter -->
+
       <p class="no-results" id="no-results" style="display:none">
         no notes tagged with this yet.
       </p>
     </div>
 
-    <!-- ── Tag sidebar ────────────────────────────────── -->
     <aside class="tag-sidebar">
       <div class="tag-sidebar-label"># filter</div>
 
@@ -78,7 +76,6 @@ const tags = [...tagCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
       btn.classList.toggle('active', btn.dataset.tag === tag)
     );
 
-    // Show/hide posts
     let visible = 0;
     postRows.forEach((row) => {
       const rowTags = (row.dataset.tags ?? '').split(',').filter(Boolean);
@@ -89,7 +86,6 @@ const tags = [...tagCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
 
     noResults.style.display = visible === 0 ? 'block' : 'none';
 
-    // Persist in URL hash so filtered links are shareable
     history.replaceState(
       null,
       '',
@@ -97,14 +93,12 @@ const tags = [...tagCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
     );
   }
 
-  // Restore from hash on load (e.g. /notes#gpu)
   const initial = location.hash.slice(1) || 'all';
   applyFilter(initial);
 
   filterBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
       const tag = btn.dataset.tag ?? 'all';
-      // Clicking the active tag again resets to "all"
       const next = btn.classList.contains('active') && tag !== 'all' ? 'all' : tag;
       applyFilter(next);
     });
