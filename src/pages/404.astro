@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base title="404" description="Page not found.">
+  <div class="section-label"># error</div>
+  <h1>segmentation fault</h1>
+
+  <div class="fault-block">
+    <div class="fault-line">
+      <span class="fault-key">signal</span>
+      <span class="fault-val">SIGSEGV (11) — invalid memory reference</span>
+    </div>
+    <div class="fault-line">
+      <span class="fault-key">address</span>
+      <span class="fault-val">0x0000000000000404</span>
+    </div>
+    <div class="fault-line">
+      <span class="fault-key">reason</span>
+      <span class="fault-val">page has been freed or never allocated</span>
+    </div>
+    <div class="fault-line">
+      <span class="fault-key">core dumped</span>
+      <span class="fault-val">false</span>
+    </div>
+  </div>
+
+  <p>
+    <a href={`${base}/`}>← return to a valid address</a>
+  </p>
+</Base>

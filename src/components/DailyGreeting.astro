@@ -1,0 +1,49 @@
+---
+/**
+ * DailyGreeting — renders "Hello" (or its equivalent in another language)
+ * that rotates once per UTC day. All visitors see the same language on the
+ * same day.
+ *
+ * Usage in index.astro:
+ *   import DailyGreeting from '../components/DailyGreeting.astro';
+ *   <h1><DailyGreeting />! I am Kausik Muthukumar</h1>
+ *
+ * The <span> starts as "Hello" (server-rendered, visible immediately) and
+ * the script swaps it client-side so the correct language shows after hydration.
+ * The `title` attribute gives a subtle tooltip with the language name on hover.
+ */
+---
+
+<span id="daily-greeting" title="English">Hello</span>
+
+<script>
+  const greetings: Array<{ text: string; lang: string }> = [
+    { text: 'Hello',       lang: 'English'    },
+    { text: 'Hola',        lang: 'Spanish'    },
+    { text: 'Bonjour',     lang: 'French'     },
+    { text: 'Ciao',        lang: 'Italian'    },
+    { text: 'Hallo',       lang: 'German'     },
+    { text: 'Olá',         lang: 'Portuguese' },
+    { text: 'Merhaba',     lang: 'Turkish'    },
+    { text: 'Hej',         lang: 'Swedish'    },
+    { text: 'Ahoj',        lang: 'Czech'      },
+    { text: 'Xin chào',    lang: 'Vietnamese' },
+    { text: 'Sawubona',    lang: 'Zulu'       },
+    { text: '你好',         lang: 'Mandarin'   },
+    { text: 'こんにちは',   lang: 'Japanese'   },
+    { text: '안녕하세요',   lang: 'Korean'     },
+    { text: 'नमस्ते',      lang: 'Hindi'      },
+    { text: 'Привет',      lang: 'Russian'    },
+    { text: 'سلام',        lang: 'Farsi'      },
+    { text: 'Molo',        lang: 'Xhosa'      },
+  ];
+
+  const el = document.getElementById('daily-greeting');
+  if (el) {
+    // UTC day index — consistent across all timezones on a given calendar day
+    const day  = Math.floor(Date.now() / 86_400_000);
+    const pick = greetings[day % greetings.length];
+    el.textContent = pick.text;
+    el.title       = pick.lang;
+  }
+</script>

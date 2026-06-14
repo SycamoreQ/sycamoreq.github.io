@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import DailyGreeting from '../components/DailyGreeting.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base>
+  <h1><DailyGreeting />! I am Kausik Muthukumar</h1>
+
+  <p>
+    I am a student, researcher and programmer. I love building and learning about low-level Machine Learning Systems like
+    Inference Systems that run the world, Compilers, down to the hardware level like GPUs, NPUs, microarchitectural optimizations and custom hardware.
+    <br /><br />
+
+    To see what I am working on currently, head to the <a href={`${base}/projects`}>projects</a> page.
+    I also read a lot of things pertaining to my projects and general interests, and write notes about them. You can find those in the <a href={`${base}/notes`}>notes</a> section.
+    Or if you just want to know what I am reading currently you can head to the <a href={`${base}/now`}>now</a> section.
+    I also enjoy writing Functional Programming code, mostly in the language I am learning now: OCaml.
+
+    Currently Reading:
+    <a href="https://www.databass.dev" class="social-link">Database Internals, Alex Petrov</a>
+    <a href="https://sysprog21.github.io/lkmpg/" class="social-link">Linux Kernel Module Programming Guide</a>
+  </p>
+
+  <div class="socials">
+    <a
+      href="https://github.com/SycamoreQ"
+      class="social-link"
+      target="_blank"
+      rel="noopener"
+    >github</a>
+
+    <a href="mailto:you@example.com" class="social-link">email</a>
+
+    <a
+      href="https://www.linkedin.com/in/kaushikmuthu"
+      class="social-link"
+      target="_blank"
+      rel="noopener"
+    >linkedin</a>
+
+    <a
+      href="https://x.com/KaushikM592752"
+      class="social-link"
+      target="_blank"
+      rel="noopener"
+    >x / twitter</a>
+  </div>
+
+  <div class="now-block">
+    <div class="now-block-label">based in</div>
+    <ul class="now-list">
+      <li>Bangalore, India</li>
+    </ul>
+  </div>
+</Base>
+
+

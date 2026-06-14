@@ -1,0 +1,40 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes', ({ data }) => !data.draft);
+  return notes.map((note) => ({
+    params: { slug: note.slug },
+    props:  { note },
+  }));
+}
+
+type Props = { note: CollectionEntry<'notes'> };
+
+const { note } = Astro.props;
+const { Content } = await note.render();
+
+const fmt = (date: Date) =>
+  date.toLocaleDateString('en-CA', { timeZone: 'UTC' });
+---
+
+<Base title={note.data.title} description={note.data.description}>
+  <a href={`${base}/notes`} class="back-link">← notes</a>
+
+  <div class="note-header">
+    <h1>{note.data.title}</h1>
+    <div class="note-meta">
+      <span>{fmt(note.data.date)}</span>
+      {note.data.tags.map((tag) => (
+        <span class="tag">#{tag}</span>
+      ))}
+    </div>
+  </div>
+
+  <div class="prose">
+    <Content />
+  </div>
+</Base>

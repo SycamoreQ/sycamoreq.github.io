@@ -1,0 +1,33 @@
+---
+import ChipIcon from './ChipIcon.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const path = Astro.url.pathname.replace(base, '') || '/';
+
+const isHome     = path === '/' || path === '/index.html';
+const isProjects = path.startsWith('/projects');
+const isNotes    = path.startsWith('/notes');
+const isNow      = path.startsWith('/now');
+---
+
+<nav>
+  <a href={`${base}/`} class="nav-brand">
+    <ChipIcon />
+    <span>sycamore<span class="brand-q">Q</span></span>
+  </a>
+
+  <div class="nav-links">
+    <a href={`${base}/`}         class="nav-link" aria-current={isHome     ? 'page' : undefined}>about</a>
+    <a href={`${base}/projects`} class="nav-link" aria-current={isProjects ? 'page' : undefined}>projects</a>
+    <a href={`${base}/notes`}    class="nav-link" aria-current={isNotes    ? 'page' : undefined}>notes</a>
+    <a href={`${base}/now`}      class="nav-link" aria-current={isNow      ? 'page' : undefined}>now</a>
+  </div>
+</nav>
+
+<style>
+  .nav-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+</style>

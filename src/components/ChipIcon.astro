@@ -1,0 +1,44 @@
+---
+/**
+ * ChipIcon — QFP-style processor/IC chip icon.
+ * 17×17px inline SVG, aligns on the text baseline via vertical-align:middle.
+ * PCB green body, gold pins, pin-1 notch dot, exposed die.
+ */
+---
+
+<svg
+  viewBox="0 0 18 18"
+  width="17"
+  height="17"
+  class="chip-icon"
+  aria-label="chip"
+  role="img"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- ── Pins: top (2) ──────────────────── -->
+  <rect x="5.5"  y="0"    width="1.5" height="3.5" rx="0.3" fill="#c8a215"/>
+  <rect x="11"   y="0"    width="1.5" height="3.5" rx="0.3" fill="#c8a215"/>
+  <!-- ── Pins: bottom (2) ───────────────── -->
+  <rect x="5.5"  y="14.5" width="1.5" height="3.5" rx="0.3" fill="#c8a215"/>
+  <rect x="11"   y="14.5" width="1.5" height="3.5" rx="0.3" fill="#c8a215"/>
+  <!-- ── Pins: left (2) ─────────────────── -->
+  <rect x="0"    y="5.5"  width="3.5" height="1.5" rx="0.3" fill="#c8a215"/>
+  <rect x="0"    y="11"   width="3.5" height="1.5" rx="0.3" fill="#c8a215"/>
+  <!-- ── Pins: right (2) ────────────────── -->
+  <rect x="14.5" y="5.5"  width="3.5" height="1.5" rx="0.3" fill="#c8a215"/>
+  <rect x="14.5" y="11"   width="3.5" height="1.5" rx="0.3" fill="#c8a215"/>
+  <!-- ── Package body ────────────────────── -->
+  <rect x="3" y="3" width="12" height="12" rx="1.5" fill="#1f7a3c"/>
+  <!-- ── Pin-1 corner dot ───────────────── -->
+  <circle cx="5.2" cy="5.2" r="1.2" fill="#165a25"/>
+  <!-- ── Exposed die ────────────────────── -->
+  <rect x="6" y="6" width="6" height="6" rx="0.4" fill="#0a0a0a"/>
+</svg>
+
+<style>
+  .chip-icon {
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+</style>

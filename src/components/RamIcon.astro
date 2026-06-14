@@ -1,0 +1,41 @@
+---
+/**
+ * RamIcon — portrait-orientation RAM stick, sized to sit inline with nav text.
+ * Renders as a ~10×18px inline-block SVG with vertical-align:middle.
+ * PCB green and gold contacts are fixed hardware colors (not theme-dependent).
+ */
+---
+
+<svg
+  viewBox="0 0 12 22"
+  width="10"
+  height="18"
+  class="ram-icon"
+  aria-label="RAM stick"
+  role="img"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- PCB body -->
+  <rect x="1"   y="0"    width="10" height="15"  rx="1"   fill="#1f7a3c"/>
+  <!-- Gold contact strip -->
+  <rect x="1"   y="14"   width="10" height="7.5"          fill="#c8a215"/>
+  <!-- Keying notch (prevents wrong-slot insertion) -->
+  <rect x="4"   y="15"   width="4"  height="6.5"          fill="#1f7a3c"/>
+  <!-- Memory chip 1 -->
+  <rect x="2.5" y="1.5"  width="7"  height="4.5" rx="0.5" fill="#0c0c0c"/>
+  <!-- Memory chip 2 -->
+  <rect x="2.5" y="8"    width="7"  height="4.5" rx="0.5" fill="#0c0c0c"/>
+  <!-- Pin-1 corner marks -->
+  <circle cx="3.5" cy="2.5"  r="0.65" fill="#1e1e1e"/>
+  <circle cx="3.5" cy="9"    r="0.65" fill="#1e1e1e"/>
+  <!-- Subtle PCB trace between chips -->
+  <line x1="6" y1="6" x2="6" y2="8" stroke="#186832" stroke-width="0.5"/>
+</svg>
+
+<style>
+  .ram-icon {
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+</style>

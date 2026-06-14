@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+
+// ─── Update this date whenever you edit the page ──────────────────────────
+const LAST_UPDATED = '2026-06-14';
+// ─────────────────────────────────────────────────────────────────────────
+---
+
+<Base title="now" description="What I'm doing right now.">
+  <div class="section-label"># now</div>
+  <h1>what i'm up to</h1>
+
+  <p class="now-meta">
+    last updated: {LAST_UPDATED} ·
+    <a href="https://nownownow.com" target="_blank" rel="noopener">what is this?</a>
+  </p>
+
+  <div class="now-block">
+    <div class="now-block-label">working on</div>
+    <ul class="now-list">
+      <li>
+        <span class="now-item-name">tesserae</span>
+        — I am trying to get Tesserae work with more complex optimizations such as warp specs and higher swizzles.  
+      </li>
+      <li>
+        <span class="now-item-name">axiom</span>
+        — working on getting coherent outputs from Llama 3.2 1B then go on to more complex models.
+      </li>
+    </ul>
+  </div>
+
+  <div class="now-block">
+    <div class="now-block-label">reading</div>
+    <ul class="now-list">
+      <li>
+        <span class="now-item-name">Database Internals</span>
+        — Alex Petrov
+      </li>
+      <li>
+        <span class="now-item-name">Linux Kernel Module Programming Guide</span>
+      </li>
+      <li>
+        <span class="now-item-name">ARM NEON</span>
+        - I am trying to lean a bit more into the hardware level and SIMD for a project I am going to introduce in the future. 
+      </li>
+      <li>
+        <span class="now-item-name">OCaml and OxCaml</span>
+        - I am trying to learn OCaml as I want to write more functional programming code and also use it for some of my projects. As a consequence I am also learning OxCaml. 
+      </li>
+      <li>
+        <span class="now-item-name">Emacs Guide and Linux Ricing</span>
+        - I building my own custom Emacs setup as I have now a CachyOS system! Will also be ricing it so I am surfing various repos. 
+    </ul>
+  </div>
+
+  <div class="now-block">
+    <div class="now-block-label">based in</div>
+    <ul class="now-list">
+      <li>Bangalore, India</li>
+    </ul>
+  </div>
+</Base>
