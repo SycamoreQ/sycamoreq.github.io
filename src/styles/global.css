@@ -435,8 +435,8 @@ p a:hover { color: var(--accent); }
 /* ── Prose (note body) ────────────────────────────────────────── */
 
 .prose {
-  font-size: 13px;
-  color: var(--muted);
+  font-size: 16px;
+  color: #c8c8c2;
   line-height: 1.85;
 }
 
