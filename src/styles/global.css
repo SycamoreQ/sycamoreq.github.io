@@ -436,7 +436,7 @@ p a:hover { color: var(--accent); }
 
 .prose {
   font-size: 16px;
-  color: #c8c8c2;
+  color: var(--text);
   line-height: 1.85;
 }
 
