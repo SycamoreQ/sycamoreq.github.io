@@ -434,42 +434,27 @@ p a:hover { color: var(--accent); }
 
 /*  Prose (note body) */
 
+main:has(.prose) {
+  --max-w: 800px; 
+}
 
 .prose {
   font-size: 16px;
   color: var(--text);
-  line-height: 1.75; /* Slightly reduced from 1.85 for better cohesion at wider widths */
+  line-height: 1.75;
   max-width: 72ch; 
   margin: 0 auto;
 }
 
-.prose p { 
-  margin-bottom: 1.5rem; 
-}
-
-.prose h2 { 
-  font-size: 1.5rem; /* 24px - Clear distinction for main sections */
-  font-weight: 600; 
-  color: var(--text); 
-  margin: 2.5rem 0 1rem; 
-}
-
-.prose h3 { 
-  font-size: 1.25rem; /* 20px - Sub-headings */
-  font-weight: 600; 
-  color: var(--text); 
-  margin: 2rem 0 0.75rem; 
-}
-
-.prose a { 
-  border-bottom: 0.5px solid var(--border-2); 
-  transition: color 0.15s; 
-}
-.prose a:hover { color: var(--accent); }
+.prose p         { margin-bottom: 1.5rem; }
+.prose h2        { font-size: 1.5rem; font-weight: 600; color: var(--text); margin: 2.5rem 0 1rem; }
+.prose h3        { font-size: 1.25rem; font-weight: 600; color: var(--text); margin: 2rem 0 0.75rem; }
+.prose a         { border-bottom: 0.5px solid var(--border-2); transition: color 0.15s; }
+.prose a:hover   { color: var(--accent); }
 
 .prose code {
   font-family: inherit;
-  font-size: 0.875rem; /* 14px - Scales better with 16px body text */
+  font-size: 0.875rem;
   background: var(--bg-2);
   border: 0.5px solid var(--border);
   padding: 2px 6px;
@@ -499,7 +484,7 @@ p a:hover { color: var(--accent); }
   color: var(--muted);
 }
 
-.prose li { margin-bottom: 0.5rem; }
+.prose li        { margin-bottom: 0.5rem; }
 
 .prose blockquote {
   border-left: 2px solid var(--border-2);
@@ -513,7 +498,6 @@ p a:hover { color: var(--accent); }
   border-top: 0.5px solid var(--border);
   margin: 2.5rem 0;
 }
-
 /* ── Mobile ───────────────────────────────────────────────────── */
 
 @media (max-width: 600px) {
