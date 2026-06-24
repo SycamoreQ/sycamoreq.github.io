@@ -6,7 +6,6 @@ export interface Project {
   tags: string[];
 }
 
-// ─── Add your projects here ────────────────────────────────────────────────
 export const projects: Project[] = [
   {
     name: 'Tesserae',
@@ -31,5 +30,14 @@ export const projects: Project[] = [
     description:
       'cellc is a container runtime from scratch in C ',
     tags: ['linux', 'C'],
+  },
+
+  {
+    name: 'seraph',
+    lang: 'ARM neon assembly, C, OCaml',
+    url: 'https://github.com/SycamoreQ/seraph',
+    description:
+      'Seraph is a kernel library for ARM neon assembly, along with a benchmark pipeline',
+    tags: ['OCaml','arm','C'],
   },
 ];

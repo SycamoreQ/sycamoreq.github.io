@@ -18,13 +18,20 @@ const LAST_UPDATED = '2026-06-14';
   <div class="now-block">
     <div class="now-block-label">working on</div>
     <ul class="now-list">
+      <span class="now-item-name">Seraph</span>
+      <li>
+        <span class="now-item-name">seraph</span>
+        — I am working on getting Seraph to support more complex ARM neon assembly kernels and optimizations, testing those optimizations and benchmarking them.
+        Currently the kernel library supports 5 kernels, I will now be going into more LLM related algorithms, so that it is in parallel with Axiom. I am also actively writing blogs
+        for Seraph. 
       <li>
         <span class="now-item-name">tesserae</span>
         — I am trying to get Tesserae work with more complex optimizations such as warp specs and higher swizzles.  
       </li>
       <li>
         <span class="now-item-name">axiom</span>
-        — working on getting coherent outputs from Llama 3.2 1B then go on to more complex models.
+        — working on getting coherent outputs from Llama 3.2 1B then go on to more complex models. I am also building an Apple Metal compatibility to maybe 
+        locally host the model in the future. So along with Seraph, I am also learning a lot of the Apple Metal Rust bindings called objc2_metal.
       </li>
     </ul>
   </div>
@@ -33,15 +40,9 @@ const LAST_UPDATED = '2026-06-14';
     <div class="now-block-label">reading</div>
     <ul class="now-list">
       <li>
-        <span class="now-item-name">Database Internals</span>
-        — Alex Petrov
-      </li>
-      <li>
-        <span class="now-item-name">Linux Kernel Module Programming Guide</span>
-      </li>
-      <li>
         <span class="now-item-name">ARM NEON</span>
-        - I am trying to lean a bit more into the hardware level and SIMD for a project I am going to introduce in the future. 
+        - I have been reading about the ARM C intrinsic library, ARM A profile architecture guide and also Apple Metal bindings for Axiom. It is more SIMD focused considering
+        Seraph is essentially a SIMD kernel library.
       </li>
       <li>
         <span class="now-item-name">OCaml and OxCaml</span>
