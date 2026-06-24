@@ -24,15 +24,18 @@ const fmt = (date: Date) =>
 <Base title={note.data.title} description={note.data.description}>
   <a href={`${base}/notes`} class="back-link">← notes</a>
 
-  <div class="note-header">
-    <h1>{note.data.title}</h1>
+  <header class="note-hero">
+    <h1 class="note-title">{note.data.title}</h1>
     <div class="note-meta">
       <span>{fmt(note.data.date)}</span>
-      {note.data.tags.map((tag) => (
-        <span class="tag">#{tag}</span>
-      ))}
+      <div class="note-tags">
+        {note.data.tags.map((tag) => (
+          <span class="tag">#{tag}</span>
+        ))}
+      </div>
     </div>
-  </div>
+  </header>
+
 
   <div class="prose">
     <Content />

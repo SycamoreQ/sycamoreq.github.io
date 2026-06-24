@@ -147,8 +147,9 @@ h2 {
 p {
   color: var(--muted);
   line-height: 1.85;
-  max-width: 600px;
+  max-width: none;
 }
+
 
 p a {
   border-bottom: 0.5px solid var(--border-2);
@@ -415,22 +416,38 @@ p a:hover { color: var(--accent); }
 
 .back-link:hover { color: var(--accent); }
 
-.note-header     { margin-bottom: 2.5rem; }
-
-.note-header h1 {
-  font-size: 15px;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
+.note-hero {
+  margin-bottom: 2.5rem;
+  text-align: center;
 }
+
+.note-title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
 
 .note-meta {
   font-size: 11px;
   color: var(--subtle);
   display: flex;
+  align-items: flex-start;
+  justify-content: center;
   gap: 0.75rem;
-  align-items: center;
   flex-wrap: wrap;
 }
+
+.note-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-left: auto;
+  max-width: 60ch;
+}
+
 
 /*  Prose (note body) */
 
@@ -439,12 +456,15 @@ main:has(.prose) {
 }
 
 .prose {
-  font-size: 12.5px;
+  font-size: 15px;
   color: var(--text);
-  line-height: 1.9;
-  max-width: 72ch; 
+  line-height: 1.95;
+  max-width: 850px;
   margin: 0 auto;
 }
+
+
+
 
 .prose p         { margin-bottom: 1.5rem; }
 .prose h2        { font-size: 1.5rem; font-weight: 600; color: var(--text); margin: 2.5rem 0 1rem; }
@@ -486,6 +506,7 @@ main:has(.prose) {
 
 .prose li        { margin-bottom: 0.5rem; }
 
+
 .prose blockquote {
   border-left: 2px solid var(--border-2);
   padding-left: 1rem;
@@ -493,11 +514,33 @@ main:has(.prose) {
   margin: 1.5rem 0;
 }
 
+/* Tables in markdown */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: 1.25rem 0;
+}
+
+.prose table th,
+.prose table td {
+  border: 0.5px solid var(--border);
+  padding: 0.55rem 0.6rem;
+  vertical-align: top;
+}
+
+.prose table th {
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg-2);
+}
+
 .prose hr {
   border: none;
   border-top: 0.5px solid var(--border);
   margin: 2.5rem 0;
 }
+
 /* ── Mobile ───────────────────────────────────────────────────── */
 
 @media (max-width: 600px) {
