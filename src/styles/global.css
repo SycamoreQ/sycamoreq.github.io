@@ -286,7 +286,7 @@ p a:hover { color: var(--accent); }
   border: 0.5px solid var(--border);
   padding: 1px 6px;
   border-radius: 3px;
-  color: var(--subtle);
+  color: var(--text);
 }
 
 /* ── Notes list / tag filter ─────────────────────────────────── */
@@ -651,7 +651,7 @@ main:has(.prose) {
 .proj-chip {
   font-family: inherit;
   font-size: 11px;
-  color: var(--muted);
+  color: var(--text);
   background: var(--bg-2);
   border: 0.5px solid var(--border);
   border-radius: 3px;
