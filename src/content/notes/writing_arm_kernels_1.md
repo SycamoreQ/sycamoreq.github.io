@@ -1,6 +1,6 @@
 ---
 title: Writing A SAXPY Kernel In ARM NEON
-date: 2025-01-01
+date: 2026-06-18
 description: This blog goes over writing an ARM NEON kernel from scratch
 tags: [assembly, ARM, OCaml]
 ---
