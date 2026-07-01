@@ -5,8 +5,6 @@ description: This blog goes over writing an ARM NEON kernel from scratch
 tags: [assembly, ARM, OCaml]
 ---
 
-# Writing A SAXPY Kernel in ARM NEON
-
 ## Introduction
 
 Hello! This blog is the output of some ARM NEON I have learnt the past few days. I will be writing a SAXPY kernel in ARM NEON and then link it with an OxCaml test suite to see how it does. I will also be implementing other kernels like convolutions or even basic attention mechanisms. This will mark the beginning of it all.
