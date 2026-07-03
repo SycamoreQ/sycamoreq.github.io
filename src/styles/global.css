@@ -1,12 +1,3 @@
-Here is your updated `global.css`.
-
-I have mapped your new color schematic directly into the CSS variables block (`:root`). Because your new color palette is explicitly a dark theme (resembling a great matrix/terminal style), I removed the `prefers-color-scheme: dark` media query so that this theme applies globally.
-
-I also updated specific elements like the headings (`h1`, `h2`, `h3`) and `code` blocks to use your designated `--heading-color` and `--code-color` variables, and set the HTML font size to your `--font-scale`.
-
-### **Updated `global.css**`
-
-```css
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -38,7 +29,6 @@ I also updated specific elements like the headings (`h1`, `h2`, `h3`) and `code`
   --max-w:        800px;
 }
 
-/* ── Base ─────────────────────────────────────────────────────── */
 
 html {
   font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', ui-monospace, monospace;
@@ -57,8 +47,6 @@ a {
   color: inherit;
   text-decoration: none;
 }
-
-/* ── Navigation ───────────────────────────────────────────────── */
 
 nav {
   display: flex;
@@ -170,7 +158,6 @@ p a:hover { color: var(--accent-bright); }
 
 .divider {
   border: none;
-  border-top: 0.5px solid var(--border);
   margin: 2.5rem 0;
 }
 
@@ -229,7 +216,6 @@ p a:hover { color: var(--accent-bright); }
   border-bottom-color: var(--accent-bright);
 }
 
-/* ── Projects ─────────────────────────────────────────────────── */
 
 .project-list { margin-top: 0.5rem; }
 
@@ -295,7 +281,6 @@ p a:hover { color: var(--accent-bright); }
   color: var(--text);
 }
 
-/* ── Notes list / tag filter ─────────────────────────────────── */
 
 .notes-layout {
   display: grid;
@@ -351,7 +336,7 @@ p a:hover { color: var(--accent-bright); }
 
 .tag-filter-link-inline {
   color: var(--accent);
-  border-bottom: 0.5px solid rgba(118, 185, 0, 0.35); /* Updated to new accent */
+  border-bottom: 0.5px solid rgba(118, 185, 0, 0.35); 
   padding-bottom: 1px;
 }
 
@@ -409,18 +394,21 @@ p a:hover { color: var(--accent-bright); }
   max-width: none;
 }
 
-/* ── Note (individual page) ───────────────────────────────────── */
 
 .back-link {
   display: inline-block;
-  font-size: 12px;
-  color: var(--muted);
-  border-bottom: 0.5px solid var(--border);
-  margin-bottom: 2.5rem;
-  transition: color 0.15s;
+  font-family: monospace;
+  font-size: 13px;
+  color: var(--subtle);
+  text-decoration: none;
+  margin-top: 1rem;    
+  margin-bottom: 2rem;  
+  transition: color 0.15s ease;
 }
 
-.back-link:hover { color: var(--accent-bright); }
+.back-link:hover {
+  color: var(--accent-bright);
+}
 
 .note-hero {
   margin-bottom: 2.5rem;
@@ -454,7 +442,6 @@ p a:hover { color: var(--accent-bright); }
 }
 
 
-/* Prose (note body) */
 
 main:has(.prose) {
   --max-w: 800px; 
@@ -474,37 +461,32 @@ main:has(.prose) {
 .prose a         { border-bottom: 0.5px solid var(--border-2); transition: color 0.15s; color: var(--accent); }
 .prose a:hover   { color: var(--accent-bright); }
 
-/* ── Inline Code ────────────────────────────────────────────── */
 .prose code {
   font-family: inherit;
   font-size: 0.875rem;
-  background: rgba(118, 185, 0, 0.1); /* Slight green tint */
+  background: rgba(118, 185, 0, 0.1); 
   color: var(--accent-bright);
   border: 0.5px solid rgba(118, 185, 0, 0.2);
   padding: 2px 6px;
   border-radius: 3px;
 }
 
-/* ── Code Blocks (Clean Terminal Hue) ──────────────────────── */
 .prose pre {
-  background: #050705; /* Deep, near-black background */
-  border: 1px solid rgba(118, 185, 0, 0.15); /* Subtle green border */
+  background: #050705; 
+  border: 1px solid rgba(118, 185, 0, 0.15); 
   padding: 1.25rem 1.5rem;
   border-radius: 6px;
   overflow-x: auto;
   margin: 1.5rem 0;
-  /* Soft green inner glow to create that ambient hue */
   box-shadow: inset 0 0 40px rgba(118, 185, 0, 0.06); 
 }
 
-/* Ensure the code inside the block doesn't inherit inline code styles */
 .prose pre code {
   background: none;
   border: none;
   padding: 0;
   font-size: 0.85rem;
   color: var(--code-text); 
-  /* Very faint phosphor text glow to keep the vibe alive */
   text-shadow: 0 0 2px rgba(164, 226, 52, 0.2); 
   line-height: 1.6;
 }
@@ -515,8 +497,8 @@ main:has(.prose) {
   border: none;
   padding: 0;
   font-size: 0.85rem;
-  color: var(--accent-bright); /* Base terminal green */
-  text-shadow: 0 0 3px rgba(164, 226, 52, 0.5); /* Phosphor glow effect */
+  color: var(--accent-bright); 
+  text-shadow: 0 0 3px rgba(164, 226, 52, 0.5); 
   line-height: 1.6;
 }
 
@@ -563,7 +545,6 @@ main:has(.prose) {
   margin: 2.5rem 0;
 }
 
-/* ── Mobile ───────────────────────────────────────────────────── */
 
 @media (max-width: 600px) {
   nav        { padding: 0.75rem 1rem; gap: 0.75rem; }
@@ -587,14 +568,12 @@ main:has(.prose) {
 }
 
 
-/* ── Nav: brand-Q accent ──────────────────────────────────── */
 
 .brand-q {
   color: var(--accent);
   font-weight: 500;
 }
 
-/* ── Notes: sidebar layout ────────────────────────────────── */
 
 .notes-layout {
   display: grid;
@@ -603,7 +582,6 @@ main:has(.prose) {
   align-items: start;
 }
 
-/* Hidden state for filtered-out posts/projects */
 .post-hidden { display: none; }
 
 .no-results {
@@ -613,7 +591,6 @@ main:has(.prose) {
   max-width: none;
 }
 
-/* ── Notes: tag sidebar ───────────────────────────────────── */
 
 .tag-sidebar {
   background: var(--bg-2);
@@ -661,94 +638,158 @@ main:has(.prose) {
 
 .tag-filter.active .tag-count { color: var(--accent); opacity: 0.7; }
 
-/* ── Projects: horizontal chip filter ────────────────────── */
+.project-list-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.project-item,
+.project-row {
+  display: grid;
+  grid-template-columns: 200px 1fr; 
+  gap: 3rem;
+  padding: 2.5rem 0;
+  border-bottom: 0.5px solid var(--border);
+  align-items: start;
+}
+
+
+.project-title,
+.project-item h2,
+.project-row h3 {
+  font-size: 16px !important;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+
+.project-tech,
+.project-tags,
+.project-item span,
+.project-item div:first-child p {
+  font-size: 11.5px !important;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+}
+
+.project-desc,
+.project-description,
+.project-item p,
+.project-row p {
+  font-size: 15.5px !important;  
+  line-height: 1.75;
+  color: var(--muted);
+  margin: 0;
+}
 
 .proj-filter-row {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 1.25rem;
+  margin-bottom: 2rem; 
 }
 
 .proj-chip {
   font-family: inherit;
-  font-size: 11px;
-  color: var(--text);
+  font-size: 12px; 
+  color: var(--subtle);
   background: var(--bg-2);
   border: 0.5px solid var(--border);
-  border-radius: 3px;
-  padding: 2px 8px;
+  border-radius: 4px;
+  padding: 4px 10px; 
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  transition: all 0.15s ease;
 }
 
 .proj-chip:hover {
-  color: var(--text);
-  border-color: var(--border-2);
+  color: var(--accent-bright);
+  border-color: var(--accent);
 }
 
 .proj-chip.active {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: transparent;
+  color: var(--accent-bright);
+  border-color: var(--accent-bright);
+  background: rgba(118, 185, 0, 0.05);
+  text-shadow: 0 0 4px rgba(164, 226, 52, 0.4);
 }
 
-/* ── /now page ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .project-item,
+  .project-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.75rem 0;
+  }
+}
 
 .now-meta {
   font-size: 11px;
   color: var(--subtle);
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   max-width: none;
 }
 
 .now-meta a {
   border-bottom: 0.5px solid var(--border);
   color: var(--subtle);
+  text-decoration: none;
+  transition: color 0.15s ease;
 }
 
-.now-meta a:hover { color: var(--muted); }
+.now-meta a:hover { 
+  color: var(--accent-bright); 
+}
 
 .now-block {
-  margin-bottom: 2rem;
+  margin-bottom: 3.5rem; 
 }
 
 .now-block-label {
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--accent);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  margin-bottom: 0.6rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 0.5px solid var(--border); 
+  max-width: 700px; 
 }
 
 .now-list {
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; 
 }
 
 .now-list li {
-  font-size: 13px;
+  font-size: 15.5px;
   color: var(--muted);
-  padding: 0.25rem 0;
-  padding-left: 1.1rem;
+  padding-left: 1.5rem; 
   position: relative;
-  line-height: 1.7;
-  max-width: 540px;
+  line-height: 1.75;
+  max-width: 700px; 
 }
 
 .now-list li::before {
   content: '→';
   position: absolute;
   left: 0;
-  color: var(--subtle);
+  color: var(--accent); 
+  font-weight: bold;
+  opacity: 0.8;
 }
 
 .now-item-name {
-  color: var(--heading);
-  font-weight: 500;
+  color: var(--text);
+  font-weight: 600;
 }
 
-/* ── 404 page ─────────────────────────────────────────────── */
 
 .fault-block {
   margin: 1.5rem 0;
@@ -773,7 +814,6 @@ main:has(.prose) {
 .fault-key { color: var(--subtle); }
 .fault-val { color: var(--text); }
 
-/* ── Mobile adjustments ───────────────────────────────────── */
 
 @media (max-width: 600px) {
   .notes-layout {
@@ -798,5 +838,3 @@ main:has(.prose) {
     padding: 2px 7px;
   }
 }
-
-```

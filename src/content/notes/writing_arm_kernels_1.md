@@ -3,6 +3,10 @@ title: Writing A SAXPY Kernel In ARM NEON
 date: 2026-06-18
 description: This blog goes over writing an ARM NEON kernel from scratch
 tags: [assembly, ARM, OCaml]
+coverImage: /cover_images/writing_arm_kernels_1.jpeg
+reference: https://en.wikipedia.org/wiki/Intel_4004
+referenceText: "cover image: world's first microprocessor: intel 4004"
+draft: false
 ---
 
 ## Introduction

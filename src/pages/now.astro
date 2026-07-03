@@ -5,51 +5,131 @@ const LAST_UPDATED = '2026-06-24';
 ---
 
 <Base title="now" description="What I'm doing right now.">
-  <div class="section-label"># now</div>
-  <h1>what i'm up to</h1>
+  <div class="now-container"> 
+    <h1 class="page-title">now/</h1>
 
-  <p class="now-meta">
-    last updated: {LAST_UPDATED} ·
-    <a href="https://nownownow.com" target="_blank" rel="noopener">what is this?</a>
-  </p>
+    <p class="now-meta">
+      last updated: {LAST_UPDATED} ·
+      <a href="https://nownownow.com" target="_blank" rel="noopener">what is this?</a>
+    </p>
 
-  <div class="now-block">
-    <div class="now-block-label">working on</div>
-    <ul class="now-list">
-      <li>
-        <span class="now-item-name">seraph</span>
-        — I am working on getting Seraph to support more complex ARM neon assembly kernels and optimizations, testing those optimizations and benchmarking them.
-        Currently the kernel library supports 5 kernels, I will now be going into more LLM related algorithms, so that it is in parallel with Axiom. I am also actively writing blogs
-        for Seraph. 
-      <li>
-        <span class="now-item-name">tesserae</span>
-        — I am trying to get Tesserae work with more complex optimizations such as warp specs and higher swizzles.  
-      </li>
-      <li>
-        <span class="now-item-name">axiom</span>
-        — working on getting coherent outputs from Llama 3.2 1B then go on to more complex models. I am also building an Apple Metal compatibility to maybe 
-        locally host the model in the future. So along with Seraph, I am also learning a lot of the Apple Metal Rust bindings called objc2_metal.
-      </li>
-    </ul>
+    <div class="now-block">
+      <div class="now-block-label">working on</div>
+      <ul class="now-list">
+        <li>
+          <span class="now-item-name">seraph</span>
+          — I am working on getting Seraph to support more complex ARM neon assembly kernels and optimizations, testing those optimizations and benchmarking them.
+          Currently the kernel library supports 5 kernels, I will now be going into more LLM related algorithms, so that it is in parallel with Axiom. I am also actively writing blogs
+          for Seraph.
+        </li>
+        <li>
+          <span class="now-item-name">tesserae</span>
+          — I am trying to get Tesserae work with more complex optimizations such as warp specs and higher swizzles. 
+        </li>
+        <li>
+          <span class="now-item-name">axiom</span>
+          — working on getting coherent outputs from Llama 3.2 1B then go on to more complex models. I am also building an Apple Metal compatibility to maybe 
+          locally host the model in the future. So along with Seraph, I am also learning a lot of the Apple Metal Rust bindings called objc2_metal.
+        </li>
+      </ul>
+    </div>
+
+    <div class="now-block">
+      <div class="now-block-label">reading</div>
+      <ul class="now-list">
+        <li>
+          <span class="now-item-name">ARM NEON</span>
+          - I have been reading about the ARM C intrinsic library, ARM A profile architecture guide and also Apple Metal bindings for Axiom. It is more SIMD focused considering
+          Seraph is essentially a SIMD kernel library.
+        </li>
+        <li>
+          <span class="now-item-name">OCaml and OxCaml</span>
+          - I am trying to learn OCaml as I want to write more functional programming code and also use it for some of my projects. As a consequence I am also learning OxCaml. 
+        </li>
+        <li>
+          <span class="now-item-name">Emacs Guide and Linux Ricing</span>
+          - I building my own custom Emacs setup as I have now a CachyOS system! Will also be ricing it so I am surfing various repos. 
+        </li>
+      </ul>
+    </div>
   </div>
-
-  <div class="now-block">
-    <div class="now-block-label">reading</div>
-    <ul class="now-list">
-      <li>
-        <span class="now-item-name">ARM NEON</span>
-        - I have been reading about the ARM C intrinsic library, ARM A profile architecture guide and also Apple Metal bindings for Axiom. It is more SIMD focused considering
-        Seraph is essentially a SIMD kernel library.
-      </li>
-      <li>
-        <span class="now-item-name">OCaml and OxCaml</span>
-        - I am trying to learn OCaml as I want to write more functional programming code and also use it for some of my projects. As a consequence I am also learning OxCaml. 
-      </li>
-      <li>
-        <span class="now-item-name">Emacs Guide and Linux Ricing</span>
-        - I building my own custom Emacs setup as I have now a CachyOS system! Will also be ricing it so I am surfing various repos. 
-    </ul>
-  </div>
-
 </Base>
 
+<style>
+  .now-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 0;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .now-meta {
+    font-size: 11px;
+    color: var(--subtle);
+    margin-bottom: 3.5rem;
+  }
+
+  .now-meta a {
+    border-bottom: 0.5px solid var(--border);
+    color: var(--subtle);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .now-meta a:hover { 
+    color: var(--accent-bright); 
+  }
+
+  .now-block {
+    margin-bottom: 3.5rem;
+  }
+
+  .now-block-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.5px solid var(--border);  
+    max-width: 750px;
+  }
+
+  .now-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; 
+  }
+
+  .now-list li {
+    font-size: 15.5px !important; 
+    color: var(--muted);
+    padding-left: 1.5rem; 
+    position: relative;
+    line-height: 1.75;
+    max-width: 750px; 
+  }
+
+  .now-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent); 
+    font-weight: bold;
+    opacity: 0.85;
+  }
+
+  .now-item-name {
+    color: var(--text);
+    font-weight: 600;
+  }
+</style>

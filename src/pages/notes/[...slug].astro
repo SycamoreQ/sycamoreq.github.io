@@ -16,10 +16,8 @@ type Props = { note: CollectionEntry<'notes'> };
 
 const { note } = Astro.props;
 
-// 1. Extract the pre-generated headings array from Astro here
 const { Content, headings } = await note.render();
 
-// 2. Filter down to only your H2 and H3 subheadings for the ToC
 const tocItems = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
 const fmt = (date: Date) =>
@@ -31,7 +29,8 @@ const fmt = (date: Date) =>
 
   {note.data.coverImage && (
     <div class="cover-image">
-      <img src={note.data.coverImage} alt={note.data.title} loading="lazy" />
+      {}
+      <img src={`${base}${note.data.coverImage}`} alt={note.data.title} loading="lazy" />
     </div>
   )}
 
@@ -52,45 +51,67 @@ const fmt = (date: Date) =>
       <h1 class="note-title">{note.data.title}</h1>
       <div class="note-meta">
         <span>{fmt(note.data.date)}</span>
+        
         {note.data.tags.length > 0 && (
           <span class="meta-sep">·</span>
         )}
         {note.data.tags.map((tag) => (
           <span class="tag">#{tag}</span>
         ))}
+
+        {}
+        {note.data.reference && (
+          <>
+            <span class="meta-sep">·</span>
+            <a 
+              href={note.data.reference} 
+              class="note-ref-link" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              [{note.data.referenceText || 'reference'}]
+            </a>
+          </>
+        )}
       </div>
 
       <div class="prose">
         <Content />
       </div>
     </div>
-
   </div>
 </Base>
 
 <style>
-  /* ── Widen main for the two-column layout ─────────────── */
   :global(main) {
     max-width: 1100px !important;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
 
-  /* ── Cover image ──────────────────────────────────────── */
   .cover-image {
-    margin: 0 0 2.5rem 0;
+    /* 0 top, auto left/right (centers it), 2.5rem bottom */
+    margin: 0 auto 2.5rem auto; 
+    
     border-radius: 10px;
     overflow: hidden;
     border: 0.5px solid var(--border);
+    background-color: #ffffff;
+    
+    width: fit-content;        /* Shrink-wraps to image width */
+    max-width: 680px;          /* Prevents overflow; aligns with your text block */
+    display: block;            /* Ensures standard block-level behavior */
   }
+  
   .cover-image img {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
+    max-height: 320px;         /* Max height ceiling */
+    width: auto;               /* Proportional width */
+    height: auto;
     display: block;
+    padding: 1.5rem;           /* Internal frame padding */
   }
+  
 
-  /* ── Outer grid ───────────────────────────────────────── */
   .note-layout {
     display: grid;
     grid-template-columns: 220px 1fr;
@@ -98,7 +119,7 @@ const fmt = (date: Date) =>
     align-items: start;
   }
 
-  /* ── ToC Layout & Typography ──────────────────────────── */
+
   .toc {
     position: sticky;
     top: 2rem;
@@ -122,7 +143,6 @@ const fmt = (date: Date) =>
     align-items: flex-start;
   }
 
-  /* Base shared style for all ToC anchor links */
   .toc-link {
     color: var(--muted);
     font-size: 13px;
@@ -132,10 +152,19 @@ const fmt = (date: Date) =>
     width: 100%;
     text-decoration: none;
     border-left: 2px solid transparent;
-    transition: color 0.15s ease, border-left-color 0.15s ease, text-shadow 0.15s ease;
+    opacity: 0.6; 
+    transition: all 0.15s ease;
   }
 
-  /* Hover and active states for top-level H2 subheadings */
+  .toc-link:hover,
+  .toc-link.active {
+    color: var(--accent-bright);
+    opacity: 1; 
+    border-left-color: var(--accent);
+    text-shadow: 0 0 4px rgba(164, 226, 52, 0.4);
+  }
+
+
   .toc-h2:hover,
   .toc-h2.active {
     color: var(--accent-bright);
@@ -143,13 +172,12 @@ const fmt = (date: Date) =>
     text-shadow: 0 0 4px rgba(164, 226, 52, 0.4);
   }
 
-  /* Indentation layout mechanics for secondary H3 headings */
   .toc-h3 {
     margin-left: 2px;
-    padding-left: 1.5rem; /* Clean alignment indentation */
+    padding-left: 1.5rem;
     font-size: 12px;
     opacity: 0.8;
-    border-left: 2px solid var(--border); /* Subtle terminal structural grid track */
+    border-left: 2px solid var(--border);
   }
 
   .toc-h3:hover,
@@ -160,7 +188,6 @@ const fmt = (date: Date) =>
     opacity: 1;
   }
 
-  /* ── Note main column ─────────────────────────────────── */
   .note-main { min-width: 0; }
 
   .note-title {
@@ -189,7 +216,6 @@ const fmt = (date: Date) =>
 
   .tag { color: var(--accent); font-size: 11px; }
 
-  /* ── Prose ────────────────────────────────────────────── */
   .prose {
     font-size: 15.5px;
     color: var(--text);
@@ -219,7 +245,20 @@ const fmt = (date: Date) =>
   }
   .prose :global(a:hover) { color: var(--accent-bright); }
 
-  /* ── Mobile ───────────────────────────────────────────── */
+  .note-ref-link {
+    font-size: 11px;
+    color: var(--subtle);
+    text-decoration: none;
+    font-family: monospace;
+    transition: color 0.15s ease, text-shadow 0.15s ease;
+  }
+
+  .note-ref-link:hover {
+    color: var(--accent-bright);
+    text-shadow: 0 0 4px rgba(164, 226, 52, 0.4);
+    text-decoration: underline;
+  }
+
   @media (max-width: 768px) {
     :global(main) { max-width: 100% !important; }
 
@@ -240,6 +279,21 @@ const fmt = (date: Date) =>
     }
 
     .note-title { font-size: 22px; }
+  }
+
+  .back-link {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 13px;
+  color: var(--subtle);
+  text-decoration: none;
+  margin-top: 1rem;    
+  margin-bottom: 2rem;  
+  transition: color 0.15s ease;
+}
+
+  .back-link:hover {
+    color: var(--accent-bright);
   }
 </style>
 
@@ -264,14 +318,12 @@ const fmt = (date: Date) =>
           }
         }
       },
-      // Triggers active green illumination cleanly when header rolls through top viewport area
       { rootMargin: '-5% 0px -80% 0px', threshold: 0 }
     );
 
     headingEls.forEach((el) => observer.observe(el));
   }
 
-  // Safely registers on basic page load or Astro view change cycles
   setupActiveHighlight();
   document.addEventListener('astro:page-load', setupActiveHighlight);
 </script>
