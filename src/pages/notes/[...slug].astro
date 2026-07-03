@@ -15,7 +15,12 @@ export async function getStaticPaths() {
 type Props = { note: CollectionEntry<'notes'> };
 
 const { note } = Astro.props;
-const { Content } = await note.render();
+
+// 1. Extract the pre-generated headings array from Astro here
+const { Content, headings } = await note.render();
+
+// 2. Filter down to only your H2 and H3 subheadings for the ToC
+const tocItems = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
 const fmt = (date: Date) =>
   date.toLocaleDateString('en-CA', { timeZone: 'UTC' });
@@ -24,20 +29,249 @@ const fmt = (date: Date) =>
 <Base title={note.data.title} description={note.data.description}>
   <a href={`${base}/notes`} class="back-link">← notes</a>
 
-  <header class="note-hero">
-    <h1 class="note-title">{note.data.title}</h1>
-    <div class="note-meta">
-      <span>{fmt(note.data.date)}</span>
-      <div class="note-tags">
+  {note.data.coverImage && (
+    <div class="cover-image">
+      <img src={note.data.coverImage} alt={note.data.title} loading="lazy" />
+    </div>
+  )}
+
+  <div class="note-layout">
+
+    <aside class="toc" id="toc">
+      <div class="toc-label">On This Page</div>
+      <nav id="toc-nav">
+        {tocItems.map((h) => (
+          <a href={`#${h.slug}`} class={`toc-link toc-h${h.depth}`}>
+            {h.text}
+          </a>
+        ))}
+      </nav>
+    </aside>
+
+    <div class="note-main">
+      <h1 class="note-title">{note.data.title}</h1>
+      <div class="note-meta">
+        <span>{fmt(note.data.date)}</span>
+        {note.data.tags.length > 0 && (
+          <span class="meta-sep">·</span>
+        )}
         {note.data.tags.map((tag) => (
           <span class="tag">#{tag}</span>
         ))}
       </div>
+
+      <div class="prose">
+        <Content />
+      </div>
     </div>
-  </header>
 
-
-  <div class="prose">
-    <Content />
   </div>
 </Base>
+
+<style>
+  /* ── Widen main for the two-column layout ─────────────── */
+  :global(main) {
+    max-width: 1100px !important;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  /* ── Cover image ──────────────────────────────────────── */
+  .cover-image {
+    margin: 0 0 2.5rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+  }
+  .cover-image img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ── Outer grid ───────────────────────────────────────── */
+  .note-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  /* ── ToC Layout & Typography ──────────────────────────── */
+  .toc {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .toc-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .toc nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+
+  /* Base shared style for all ToC anchor links */
+  .toc-link {
+    color: var(--muted);
+    font-size: 13px;
+    padding: 4px 0 4px 0.75rem;
+    line-height: 1.4;
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: color 0.15s ease, border-left-color 0.15s ease, text-shadow 0.15s ease;
+  }
+
+  /* Hover and active states for top-level H2 subheadings */
+  .toc-h2:hover,
+  .toc-h2.active {
+    color: var(--accent-bright);
+    border-left-color: var(--accent);
+    text-shadow: 0 0 4px rgba(164, 226, 52, 0.4);
+  }
+
+  /* Indentation layout mechanics for secondary H3 headings */
+  .toc-h3 {
+    margin-left: 2px;
+    padding-left: 1.5rem; /* Clean alignment indentation */
+    font-size: 12px;
+    opacity: 0.8;
+    border-left: 2px solid var(--border); /* Subtle terminal structural grid track */
+  }
+
+  .toc-h3:hover,
+  .toc-h3.active {
+    color: var(--accent-bright);
+    border-left-color: var(--accent-bright);
+    text-shadow: 0 0 4px rgba(164, 226, 52, 0.4);
+    opacity: 1;
+  }
+
+  /* ── Note main column ─────────────────────────────────── */
+  .note-main { min-width: 0; }
+
+  .note-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--heading);
+    line-height: 1.2;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.02em;
+  }
+
+  .note-meta {
+    font-size: 12px;
+    color: var(--subtle);
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .meta-sep { color: var(--border-2); }
+
+  .tag { color: var(--accent); font-size: 11px; }
+
+  /* ── Prose ────────────────────────────────────────────── */
+  .prose {
+    font-size: 15.5px;
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  .prose :global(p) { margin-bottom: 1.5rem; max-width: none; color: var(--text); }
+
+  .prose :global(h2) {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--heading);
+    margin: 3rem 0 1rem;
+    padding-top: 0.25rem;
+  }
+
+  .prose :global(h3) {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--heading);
+    margin: 2rem 0 0.65rem;
+  }
+
+  .prose :global(a) {
+    border-bottom: 0.5px solid var(--border-2);
+    transition: color 0.15s;
+  }
+  .prose :global(a:hover) { color: var(--accent-bright); }
+
+  /* ── Mobile ───────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    :global(main) { max-width: 100% !important; }
+
+    .cover-image img { height: 200px; }
+
+    .note-layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .toc {
+      position: static;
+      background: var(--bg-2);
+      border: 0.5px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .note-title { font-size: 22px; }
+  }
+</style>
+
+<script>
+  function setupActiveHighlight() {
+    const links = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
+    const headingEls = [...links]
+      .map((l) => document.getElementById(decodeURIComponent(l.getAttribute('href')!.slice(1))))
+      .filter(Boolean) as HTMLElement[];
+
+    if (headingEls.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            links.forEach((l) => l.classList.remove('active'));
+            const activeLink = document.querySelector<HTMLAnchorElement>(
+              `.toc-link[href="#${CSS.escape(entry.target.id)}"]`
+            );
+            activeLink?.classList.add('active');
+          }
+        }
+      },
+      // Triggers active green illumination cleanly when header rolls through top viewport area
+      { rootMargin: '-5% 0px -80% 0px', threshold: 0 }
+    );
+
+    headingEls.forEach((el) => observer.observe(el));
+  }
+
+  // Safely registers on basic page load or Astro view change cycles
+  setupActiveHighlight();
+  document.addEventListener('astro:page-load', setupActiveHighlight);
+</script>

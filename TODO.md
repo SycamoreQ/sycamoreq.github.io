@@ -1,10 +1,5 @@
-# TODO
-
-- [x] Update `src/pages/notes/[...slug].astro`
-  - [x] Change left ToC label text from “# contents” to “On this page”.
-  - [x] Adjust ToC link styling to show green underline on hover and active.
-  - [x] Improve on-page cover image layout/styling (no OG/social metadata changes).
-
-- [x] Build/test the site (e.g., `npm run build`) to ensure Astro compiles.
-
-
+- [ ] Implement green hover underline styling for ToC main headings (h2)
+- [ ] Convert ToC to hierarchical folder/dropdown: h2 as collapsible parent, h3 as dropdown children
+- [ ] Ensure all ToC links (h2 + h3) use green underline styling + correct active state
+- [ ] Update ToC active-section IntersectionObserver to work with new DOM structure
+- [x] Verify in browser: hover, expand/collapse, active highlight

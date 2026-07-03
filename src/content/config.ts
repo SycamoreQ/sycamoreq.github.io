@@ -8,6 +8,7 @@ const notes = defineCollection({
     description: z.string(),
     tags:        z.array(z.string()).optional().default([]),
     draft:       z.boolean().optional().default(false),  // set true to hide
+    coverImage:  z.string().optional(),
   }),
 });
 

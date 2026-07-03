@@ -1,3 +1,12 @@
+Here is your updated `global.css`.
+
+I have mapped your new color schematic directly into the CSS variables block (`:root`). Because your new color palette is explicitly a dark theme (resembling a great matrix/terminal style), I removed the `prefers-color-scheme: dark` media query so that this theme applies globally.
+
+I also updated specific elements like the headings (`h1`, `h2`, `h3`) and `code` blocks to use your designated `--heading-color` and `--code-color` variables, and set the HTML font size to your `--font-scale`.
+
+### **Updated `global.css**`
+
+```css
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -7,35 +16,33 @@
 /* ── Tokens ───────────────────────────────────────────────────── */
 
 :root {
-  --accent:       #3B6D11;
-  --bg:           #fafaf9;
-  --bg-2:         #f2f2f0;
-  --text:         #1a1a18;
-  --muted:        #5c5c57;
-  --subtle:       #9a9a94;
-  --border:       rgba(0, 0, 0, 0.10);
-  --border-2:     rgba(0, 0, 0, 0.20);
+  /* Mapped from your provided schema */
+  --font-scale:   0.95em;
+  
+  --bg:           #0a0e0a; /* background-color */
+  --bg-2:         #0f1410; /* surface-color & code-background */
+  
+  --text:         #c8d4c8; /* text-color & blockquote */
+  --muted:        #6f7a6f; /* muted-color */
+  --subtle:       #4a7300; /* mapped to accent-dim / visited */
+  --heading:      #e6f2e6; /* heading-color */
+  
+  --accent:       #76b900; /* accent / link-color */
+  --accent-bright:#a4e234; /* accent-bright */
+  
+  --code-text:    #d6e3d6; /* code-color */
+  
+  --border:       #1c2620; /* rule-color */
+  --border-2:     #28352d; /* slightly lighter for depth */
+  
   --max-w:        800px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --accent:     #4ade80;
-    --bg:         #111110;
-    --bg-2:       #1c1c1a;
-    --text:       #e8e8e2;
-    --muted:      #8a8a84;
-    --subtle:     #5a5a54;
-    --border:     rgba(255, 255, 255, 0.08);
-    --border-2:   rgba(255, 255, 255, 0.18);
-  }
 }
 
 /* ── Base ─────────────────────────────────────────────────────── */
 
 html {
   font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', ui-monospace, monospace;
-  font-size: 15px;
+  font-size: var(--font-scale);
   line-height: 1.7;
   color: var(--text);
   background-color: var(--bg);
@@ -133,14 +140,14 @@ footer a:hover { color: var(--muted); }
 h1 {
   font-size: 18px;
   font-weight: 500;
-  color: var(--text);
+  color: var(--heading);
   margin-bottom: 1rem;
 }
 
 h2 {
   font-size: 13px;
   font-weight: 500;
-  color: var(--text);
+  color: var(--heading);
   margin-bottom: 1.25rem;
 }
 
@@ -150,12 +157,11 @@ p {
   max-width: none;
 }
 
-
 p a {
   border-bottom: 0.5px solid var(--border-2);
 }
 
-p a:hover { color: var(--accent); }
+p a:hover { color: var(--accent-bright); }
 
 .tag {
   color: var(--accent);
@@ -219,8 +225,8 @@ p a:hover { color: var(--accent); }
 }
 
 .social-link:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--accent-bright);
+  border-bottom-color: var(--accent-bright);
 }
 
 /* ── Projects ─────────────────────────────────────────────────── */
@@ -244,14 +250,14 @@ p a:hover { color: var(--accent); }
 .proj-name {
   font-size: 13px;
   font-weight: 500;
-  color: var(--text);
+  color: var(--heading);
   display: inline-flex;
   align-items: center;
   gap: 5px;
   transition: color 0.15s;
 }
 
-.proj-name:hover { color: var(--accent); }
+.proj-name:hover { color: var(--accent-bright); }
 
 .proj-arrow {
   color: var(--subtle);
@@ -345,7 +351,7 @@ p a:hover { color: var(--accent); }
 
 .tag-filter-link-inline {
   color: var(--accent);
-  border-bottom: 0.5px solid rgba(59, 109, 17, 0.35);
+  border-bottom: 0.5px solid rgba(118, 185, 0, 0.35); /* Updated to new accent */
   padding-bottom: 1px;
 }
 
@@ -388,12 +394,12 @@ p a:hover { color: var(--accent); }
 
 .post-title {
   font-size: 13px;
-  color: var(--text);
+  color: var(--heading);
   display: block;
   transition: color 0.15s;
 }
 
-.post-row:hover .post-title { color: var(--accent); }
+.post-row:hover .post-title { color: var(--accent-bright); }
 
 .post-desc {
   font-size: 11px;
@@ -414,7 +420,7 @@ p a:hover { color: var(--accent); }
   transition: color 0.15s;
 }
 
-.back-link:hover { color: var(--accent); }
+.back-link:hover { color: var(--accent-bright); }
 
 .note-hero {
   margin-bottom: 2.5rem;
@@ -425,9 +431,8 @@ p a:hover { color: var(--accent); }
   font-size: 32px;
   font-weight: 600;
   margin-bottom: 0.75rem;
-  color: var(--text);
+  color: var(--heading);
 }
-
 
 .note-meta {
   font-size: 11px;
@@ -449,7 +454,7 @@ p a:hover { color: var(--accent); }
 }
 
 
-/*  Prose (note body) */
+/* Prose (note body) */
 
 main:has(.prose) {
   --max-w: 800px; 
@@ -463,38 +468,56 @@ main:has(.prose) {
   margin: 0 auto;
 }
 
-
-
-
 .prose p         { margin-bottom: 1.5rem; }
-.prose h2        { font-size: 1.5rem; font-weight: 600; color: var(--text); margin: 2.5rem 0 1rem; }
-.prose h3        { font-size: 1.25rem; font-weight: 600; color: var(--text); margin: 2rem 0 0.75rem; }
-.prose a         { border-bottom: 0.5px solid var(--border-2); transition: color 0.15s; }
-.prose a:hover   { color: var(--accent); }
+.prose h2        { font-size: 1.5rem; font-weight: 600; color: var(--heading); margin: 2.5rem 0 1rem; }
+.prose h3        { font-size: 1.25rem; font-weight: 600; color: var(--heading); margin: 2rem 0 0.75rem; }
+.prose a         { border-bottom: 0.5px solid var(--border-2); transition: color 0.15s; color: var(--accent); }
+.prose a:hover   { color: var(--accent-bright); }
 
+/* ── Inline Code ────────────────────────────────────────────── */
 .prose code {
   font-family: inherit;
   font-size: 0.875rem;
-  background: var(--bg-2);
-  border: 0.5px solid var(--border);
+  background: rgba(118, 185, 0, 0.1); /* Slight green tint */
+  color: var(--accent-bright);
+  border: 0.5px solid rgba(118, 185, 0, 0.2);
   padding: 2px 6px;
   border-radius: 3px;
 }
 
+/* ── Code Blocks (Clean Terminal Hue) ──────────────────────── */
 .prose pre {
-  background: var(--bg-2);
-  border: 0.5px solid var(--border);
-  padding: 1rem 1.25rem;
-  border-radius: 4px;
+  background: #050705; /* Deep, near-black background */
+  border: 1px solid rgba(118, 185, 0, 0.15); /* Subtle green border */
+  padding: 1.25rem 1.5rem;
+  border-radius: 6px;
   overflow-x: auto;
   margin: 1.5rem 0;
+  /* Soft green inner glow to create that ambient hue */
+  box-shadow: inset 0 0 40px rgba(118, 185, 0, 0.06); 
 }
 
+/* Ensure the code inside the block doesn't inherit inline code styles */
 .prose pre code {
   background: none;
   border: none;
   padding: 0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  color: var(--code-text); 
+  /* Very faint phosphor text glow to keep the vibe alive */
+  text-shadow: 0 0 2px rgba(164, 226, 52, 0.2); 
+  line-height: 1.6;
+}
+.prose pre code {
+  position: relative;
+  z-index: 1;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--accent-bright); /* Base terminal green */
+  text-shadow: 0 0 3px rgba(164, 226, 52, 0.5); /* Phosphor glow effect */
+  line-height: 1.6;
 }
 
 .prose ul,
@@ -506,11 +529,10 @@ main:has(.prose) {
 
 .prose li        { margin-bottom: 0.5rem; }
 
-
 .prose blockquote {
   border-left: 2px solid var(--border-2);
   padding-left: 1rem;
-  color: var(--subtle);
+  color: var(--text);
   margin: 1.5rem 0;
 }
 
@@ -531,7 +553,7 @@ main:has(.prose) {
 
 .prose table th {
   font-weight: 600;
-  color: var(--text);
+  color: var(--heading);
   background: var(--bg-2);
 }
 
@@ -628,7 +650,7 @@ main:has(.prose) {
 }
 
 .tag-filter:hover    { color: var(--text); }
-.tag-filter.active   { color: var(--accent); }
+.tag-filter.active   { color: var(--accent-bright); }
 
 .tag-count {
   font-size: 10px;
@@ -722,7 +744,7 @@ main:has(.prose) {
 }
 
 .now-item-name {
-  color: var(--text);
+  color: var(--heading);
   font-weight: 500;
 }
 
@@ -776,3 +798,5 @@ main:has(.prose) {
     padding: 2px 7px;
   }
 }
+
+```
