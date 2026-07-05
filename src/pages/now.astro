@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 
-const LAST_UPDATED = '2026-06-24';
+const LAST_UPDATED = '2026-07-05';
 ---
 
 <Base title="now" description="What I'm doing right now.">
@@ -17,19 +17,12 @@ const LAST_UPDATED = '2026-06-24';
       <div class="now-block-label">working on</div>
       <ul class="now-list">
         <li>
-          <span class="now-item-name">seraph</span>
-          — I am working on getting Seraph to support more complex ARM neon assembly kernels and optimizations, testing those optimizations and benchmarking them.
-          Currently the kernel library supports 5 kernels, I will now be going into more LLM related algorithms, so that it is in parallel with Axiom. I am also actively writing blogs
-          for Seraph.
-        </li>
-        <li>
           <span class="now-item-name">tesserae</span>
           — I am trying to get Tesserae work with more complex optimizations such as warp specs and higher swizzles. 
         </li>
         <li>
           <span class="now-item-name">axiom</span>
-          — working on getting coherent outputs from Llama 3.2 1B then go on to more complex models. I am also building an Apple Metal compatibility to maybe 
-          locally host the model in the future. So along with Seraph, I am also learning a lot of the Apple Metal Rust bindings called objc2_metal.
+          — working on getting the Metal Backend for Axiom to work. 
         </li>
       </ul>
     </div>
@@ -38,9 +31,14 @@ const LAST_UPDATED = '2026-06-24';
       <div class="now-block-label">reading</div>
       <ul class="now-list">
         <li>
-          <span class="now-item-name">ARM NEON</span>
-          - I have been reading about the ARM C intrinsic library, ARM A profile architecture guide and also Apple Metal bindings for Axiom. It is more SIMD focused considering
-          Seraph is essentially a SIMD kernel library.
+          <span class="now-item-name">Garbage Collection</span>
+          - I am reading this book on <a href="https://github.com/sauravomar/ebooks/blob/master/The%20Garbage%20Collection%20Handbook.pdf"> Garbage Collection by Richard Jones</a>. Really
+          want to see how far I can go with optimizing memory management in my projects.
+        </li> 
+        <li>
+          <span class="now-item-name">Apple Neural Engine</span>
+          - I found some good resources on the Apple Neural Engine reading the following: <a href="https://maderix.substack.com/p/inside-the-m4-apple-neural-engine">Inside the M4 Apple Neural Engine</a>. I hope this also helps
+          me with some of my Axiom work although it is pretty indirect. This is a pretty complex topic and I am still wrapping my head around it.
         </li>
         <li>
           <span class="now-item-name">OCaml and OxCaml</span>
@@ -48,7 +46,7 @@ const LAST_UPDATED = '2026-06-24';
         </li>
         <li>
           <span class="now-item-name">Emacs Guide and Linux Ricing</span>
-          - I building my own custom Emacs setup as I have now a CachyOS system! Will also be ricing it so I am surfing various repos. 
+          - I built my custom Niri Setup for my CachyOS system! Will probably write about it in sometime but for now I am getting myself familiarized with the system.
         </li>
       </ul>
     </div>
