@@ -53,6 +53,19 @@ const LAST_UPDATED = '2026-07-05';
   </div>
 </Base>
 
+<style is:global>
+  .now-container a {
+    text-decoration: none; 
+  }
+
+  .now-container a:hover {
+    text-decoration: underline !important;
+    text-decoration-color: var(--accent) !important; 
+    text-decoration-thickness: 1px !important;
+    text-underline-offset: 4px !important; 
+  }
+</style>
+
 <style>
   .now-container {
     max-width: 900px;
@@ -115,6 +128,20 @@ const LAST_UPDATED = '2026-07-05';
     position: relative;
     line-height: 1.75;
     max-width: 750px; 
+  }
+
+  .now-content a {
+    color: var(--text); 
+    text-decoration: underline;
+    text-decoration-color: var(--accent); 
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px; 
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+    }
+
+    .now-content a:hover {
+    color: var(--accent-bright);
+    text-decoration-color: var(--accent-bright);
   }
 
   .now-list li::before {
