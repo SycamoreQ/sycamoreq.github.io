@@ -5,7 +5,7 @@ const notes = defineCollection({
   schema: z.object({
     title:       z.string(),
     date:        z.coerce.date(),       // accepts "YYYY-MM-DD" strings
-    description: z.string(),
+    description: z.string().optional(), 
     tags:        z.array(z.string()).optional().default([]),
     draft:       z.boolean().optional().default(false),  // set true to hide
     coverImage:  z.string().optional(),

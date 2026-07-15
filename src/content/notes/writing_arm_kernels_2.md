@@ -1,6 +1,6 @@
 ---
 title: Optimizing The SAXPY Kernel In ARM NEON
-date: 2026-07-15
+date: 2026-07-5
 description: This blog optimizes the SAXPY kernel
 tags: [assembly, ARM, OCaml]
 coverImage: /cover_images/writing_arm_kernels_2.jpg
