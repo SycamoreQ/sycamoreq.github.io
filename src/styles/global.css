@@ -502,6 +502,14 @@ main:has(.prose) {
   line-height: 1.6;
 }
 
+/* ── Codeblock Syntax Override ────────────────────────────── */
+/* This forces Shiki theme tokens to drop the underline */
+.prose pre code span,
+.astro-code span {
+  text-decoration: none !important;
+  font-style: normal !important; /* Also prevents unwanted italics */
+}
+
 .prose ul,
 .prose ol {
   padding-left: 1.5rem;
