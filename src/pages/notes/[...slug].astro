@@ -22,17 +22,34 @@ const tocItems = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
 const fmt = (date: Date) =>
   date.toLocaleDateString('en-CA', { timeZone: 'UTC' });
+
+const formatFullDate = (date: Date) => {
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  const day = date.getUTCDate();
+  const month = months[date.getUTCMonth()];
+  const year = date.getUTCFullYear();
+
+  const getOrdinal = (n: number) => {
+    const s = ['th', 'st', 'nd', 'rd'];
+    const v = n % 100;
+    return s[(v - 20) % 10] || s[v] || s[0];
+  };
+
+  return `${month} ${day}${getOrdinal(day)}, ${year}`;
+};
+
+const allNotes = await getCollection('notes', ({ data }) => !data.draft);
+const otherNotes = allNotes
+  .filter((n) => n.slug !== note.slug)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <Base title={note.data.title} description={note.data.description}>
   <a href={`${base}/notes`} class="back-link">← notes</a>
 
-  {note.data.coverImage && (
-    <div class="cover-image">
-      {}
-      <img src={`${base}${note.data.coverImage}`} alt={note.data.title} loading="lazy" />
-    </div>
-  )}
 
   <div class="note-layout">
 
@@ -50,17 +67,18 @@ const fmt = (date: Date) =>
     <div class="note-main">
       <h1 class="note-title">{note.data.title}</h1>
       <div class="note-meta">
-        <span>{fmt(note.data.date)}</span>
+        <span class="note-date">{formatFullDate(note.data.date)}</span>
         
         {note.data.tags.length > 0 && (
           <span class="meta-sep">·</span>
         )}
-        {note.data.tags.map((tag) => (
-          <span class="tag">#{tag}</span>
-        ))}
+        <div class="note-tags-list">
+          {note.data.tags.map((tag) => (
+            <span class="tag">#{tag}</span>
+          ))}
+        </div>
 
-        {}
-        {note.data.reference && (
+        {note.data.reference && !note.data.referenceText?.toLowerCase().includes('cover image') && (
           <>
             <span class="meta-sep">·</span>
             <a 
@@ -78,61 +96,82 @@ const fmt = (date: Date) =>
       <div class="prose">
         <Content />
       </div>
+
+      {otherNotes.length > 0 && (
+        <section class="other-notes-section" aria-label="Other blog posts">
+          <div class="other-notes-header">
+            <div class="other-notes-label">
+              <span class="prompt">//</span> other notes
+            </div>
+            <div class="slider-controls">
+              <button
+                type="button"
+                class="slider-btn"
+                id="slide-prev-btn"
+                aria-label="Scroll other notes left"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                class="slider-btn"
+                id="slide-next-btn"
+                aria-label="Scroll other notes right"
+              >
+                →
+              </button>
+            </div>
+          </div>
+
+          <div class="other-notes-slider" id="other-notes-slider" role="region" aria-label="Other notes slider">
+            {otherNotes.map((other) => (
+              <a href={`${base}/notes/${other.slug}`} class="other-note-card">
+                <div class="other-card-meta">
+                  <time>{fmt(other.data.date)}</time>
+                  {other.data.tags && other.data.tags.length > 0 && (
+                    <span class="other-card-tag">#{other.data.tags[0]}</span>
+                  )}
+                </div>
+                <h3 class="other-card-title">{other.data.title}</h3>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   </div>
 </Base>
 
 <style>
   :global(main) {
-    max-width: 1100px !important;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    max-width: 1400px !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
   }
-
-  .cover-image {
-    /* 0 top, auto left/right (centers it), 2.5rem bottom */
-    margin: 0 auto 2.5rem auto; 
-    
-    border-radius: 10px;
-    overflow: hidden;
-    border: 0.5px solid var(--border);
-    background-color: #ffffff;
-    
-    width: fit-content;        /* Shrink-wraps to image width */
-    max-width: 680px;          /* Prevents overflow; aligns with your text block */
-    display: block;            /* Ensures standard block-level behavior */
-  }
-  
-  .cover-image img {
-    max-height: 320px;         /* Max height ceiling */
-    width: auto;               /* Proportional width */
-    height: auto;
-    display: block;
-    padding: 1.5rem;           /* Internal frame padding */
-  }
-  
 
   .note-layout {
     display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 4rem;
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: 3rem;
     align-items: start;
   }
-
 
   .toc {
     position: sticky;
     top: 2rem;
+    width: 230px;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
   }
 
   .toc-label {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 600;
     color: var(--accent);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    margin-bottom: 0.85rem;
-    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem;
     border-bottom: 0.5px solid var(--border);
   }
 
@@ -145,15 +184,17 @@ const fmt = (date: Date) =>
 
   .toc-link {
     color: var(--muted);
-    font-size: 13px;
-    padding: 4px 0 4px 0.75rem;
+    font-size: 12px;
+    padding: 3px 0 3px 0.75rem;
     line-height: 1.4;
     display: block;
     width: 100%;
     text-decoration: none;
     border-left: 2px solid transparent;
-    opacity: 0.6; 
+    opacity: 0.65; 
     transition: all 0.15s ease;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .toc-link:hover,
@@ -164,7 +205,6 @@ const fmt = (date: Date) =>
     text-shadow: 0 0 4px rgba(164, 226, 52, 0.4);
   }
 
-
   .toc-h2:hover,
   .toc-h2.active {
     color: var(--accent-bright);
@@ -174,9 +214,9 @@ const fmt = (date: Date) =>
 
   .toc-h3 {
     margin-left: 2px;
-    padding-left: 1.5rem;
-    font-size: 12px;
-    opacity: 0.8;
+    padding-left: 1.35rem;
+    font-size: 11px;
+    opacity: 0.85;
     border-left: 2px solid var(--border);
   }
 
@@ -188,7 +228,10 @@ const fmt = (date: Date) =>
     opacity: 1;
   }
 
-  .note-main { min-width: 0; }
+  .note-main {
+    min-width: 0;
+    width: 100%;
+  }
 
   .note-title {
     font-size: 32px;
@@ -200,11 +243,11 @@ const fmt = (date: Date) =>
   }
 
   .note-meta {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--subtle);
     display: flex;
     justify-content: flex-start;
-    gap: 0.5rem;
+    gap: 0.75rem;
     align-items: center;
     flex-wrap: wrap;
     margin-bottom: 2.5rem;
@@ -212,17 +255,62 @@ const fmt = (date: Date) =>
     border-bottom: 0.5px solid var(--border);
   }
 
+  .note-date {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--subtle);
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+
+  .note-tags-list {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+  }
+
   .meta-sep { color: var(--border-2); }
 
-  .tag { color: var(--accent); font-size: 11px; }
+  .tag {
+    color: var(--accent);
+    font-size: 11px;
+    background: #060906;
+    border: 0.5px solid var(--border-2);
+    border-radius: 4px;
+    padding: 2px 7px;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    transition: all 0.15s ease;
+  }
+
+  .tag:hover {
+    color: var(--accent-bright);
+    border-color: var(--accent);
+    background: rgba(118, 185, 0, 0.06);
+  }
 
   .prose {
     font-size: 15.5px;
     color: var(--text);
-    line-height: 1.75;
+    line-height: 1.8;
+    max-width: none !important;
+    margin: 0 !important;
+    width: 100%;
   }
 
-  .prose :global(p) { margin-bottom: 1.5rem; max-width: none; color: var(--text); }
+  .prose :global(p) {
+    margin-bottom: 1.5rem;
+    max-width: none;
+    color: var(--text);
+  }
+
+  .prose :global(pre) {
+    width: 100%;
+    max-width: 100%;
+  }
 
   .prose :global(h2) {
     font-size: 20px;
@@ -262,7 +350,6 @@ const fmt = (date: Date) =>
   @media (max-width: 768px) {
     :global(main) { max-width: 100% !important; }
 
-    .cover-image img { height: 200px; }
 
     .note-layout {
       grid-template-columns: 1fr;
@@ -295,35 +382,241 @@ const fmt = (date: Date) =>
   .back-link:hover {
     color: var(--accent-bright);
   }
+
+  /* ── Other notes sliding bar ── */
+  .other-notes-section {
+    margin-top: 4.5rem;
+    padding-top: 2rem;
+    border-top: 0.5px solid var(--border);
+  }
+
+  .other-notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .other-notes-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .slider-controls {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .slider-btn {
+    background: #060906;
+    border: 0.5px solid var(--border);
+    color: var(--muted);
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .slider-btn:hover:not(:disabled) {
+    color: var(--accent-bright);
+    border-color: var(--accent);
+    background: rgba(118, 185, 0, 0.08);
+  }
+
+  .slider-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
+  }
+
+  .other-notes-slider {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    padding: 0.25rem 0 0.85rem 0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .other-notes-slider::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .other-notes-slider::-webkit-scrollbar-track {
+    background: var(--bg-2);
+    border-radius: 2px;
+  }
+
+  .other-notes-slider::-webkit-scrollbar-thumb {
+    background: var(--border-2);
+    border-radius: 2px;
+  }
+
+  .other-notes-slider::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+  }
+
+  .other-note-card {
+    flex: 0 0 250px;
+    min-width: 250px;
+    max-width: 250px;
+    scroll-snap-align: start;
+    background: #060906;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.9rem 1rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.6rem;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .other-note-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4),
+                0 0 10px rgba(118, 185, 0, 0.1);
+  }
+
+  .other-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10.5px;
+    color: var(--subtle);
+  }
+
+  .other-card-tag {
+    color: var(--accent);
+    font-size: 10px;
+  }
+
+  .other-card-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--heading);
+    line-height: 1.35;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.15s ease;
+  }
+
+  .other-note-card:hover .other-card-title {
+    color: var(--accent-bright);
+    text-shadow: 0 0 4px rgba(164, 226, 52, 0.35);
+  }
 </style>
 
 <script>
   function setupActiveHighlight() {
-    const links = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
-    const headingEls = [...links]
-      .map((l) => document.getElementById(decodeURIComponent(l.getAttribute('href')!.slice(1))))
-      .filter(Boolean) as HTMLElement[];
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc-link'));
+    const items = links
+      .map((link) => {
+        const href = link.getAttribute('href');
+        if (!href || !href.startsWith('#')) return null;
+        const id = decodeURIComponent(href.slice(1));
+        const heading = document.getElementById(id);
+        return heading ? { link, heading } : null;
+      })
+      .filter((item): item is { link: HTMLAnchorElement; heading: HTMLElement } => item !== null);
 
-    if (headingEls.length === 0) return;
+    if (items.length === 0) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            links.forEach((l) => l.classList.remove('active'));
-            const activeLink = document.querySelector<HTMLAnchorElement>(
-              `.toc-link[href="#${CSS.escape(entry.target.id)}"]`
-            );
-            activeLink?.classList.add('active');
-          }
+    function setActive(activeLink: HTMLAnchorElement | null) {
+      links.forEach((l) => l.classList.remove('active'));
+      if (activeLink) {
+        activeLink.classList.add('active');
+      }
+    }
+
+    function updateHighlight() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const viewportHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+
+      // If user is at or very near the bottom of the page, activate the last item!
+      if (scrollY + viewportHeight >= docHeight - 80) {
+        setActive(items[items.length - 1].link);
+        return;
+      }
+
+      // Check headings in document order with trigger threshold 140px from top
+      const triggerOffset = 140;
+      let activeItem = items[0];
+
+      for (let i = 0; i < items.length; i++) {
+        const rect = items[i].heading.getBoundingClientRect();
+        if (rect.top <= triggerOffset) {
+          activeItem = items[i];
+        } else {
+          break;
         }
-      },
-      { rootMargin: '-5% 0px -80% 0px', threshold: 0 }
-    );
+      }
 
-    headingEls.forEach((el) => observer.observe(el));
+      setActive(activeItem.link);
+    }
+
+    let ticking = false;
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateHighlight();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateHighlight();
   }
 
   setupActiveHighlight();
   document.addEventListener('astro:page-load', setupActiveHighlight);
+
+  function setupOtherNotesSlider() {
+    const slider = document.getElementById('other-notes-slider');
+    const prevBtn = document.getElementById('slide-prev-btn') as HTMLButtonElement | null;
+    const nextBtn = document.getElementById('slide-next-btn') as HTMLButtonElement | null;
+
+    if (!slider || !prevBtn || !nextBtn) return;
+
+    function updateButtonStates() {
+      if (!slider || !prevBtn || !nextBtn) return;
+      const atStart = slider.scrollLeft <= 5;
+      const atEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 5;
+      prevBtn.disabled = atStart;
+      nextBtn.disabled = atEnd;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      slider.scrollBy({ left: -266, behavior: 'smooth' });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      slider.scrollBy({ left: 266, behavior: 'smooth' });
+    });
+
+    slider.addEventListener('scroll', updateButtonStates, { passive: true });
+    window.addEventListener('resize', updateButtonStates, { passive: true });
+    updateButtonStates();
+  }
+
+  setupOtherNotesSlider();
+  document.addEventListener('astro:page-load', setupOtherNotesSlider);
 </script>
