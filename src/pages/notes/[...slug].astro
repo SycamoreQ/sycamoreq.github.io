@@ -333,6 +333,22 @@ const otherNotes = allNotes
   }
   .prose :global(a:hover) { color: var(--accent-bright); }
 
+  .prose :global(img) {
+    display: block;
+    max-width: min(100%, 580px);
+    width: auto;
+    height: auto;
+    margin: 2rem auto;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .prose :global(p:has(> img)) {
+    display: flex;
+    justify-content: center;
+  }
+
   .note-ref-link {
     font-size: 11px;
     color: var(--subtle);
