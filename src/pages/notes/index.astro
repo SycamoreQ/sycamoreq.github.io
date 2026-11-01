@@ -56,7 +56,7 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
                         type="button"
                         class="row-tag-btn"
                         data-tag={tag.toLowerCase()}
-                        title={`Filter by #${tag}`}
+                        title={`Filter by ${tag}`}
                       >
                         #{tag}
                       </button>
@@ -69,19 +69,19 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
         </div>
 
         <div class="no-results" id="no-results" style="display: none;">
-          <p class="no-results-msg">no notes found matching this hashtag.</p>
+          <p class="no-results-msg">no notes found matching this tag.</p>
           <button type="button" class="reset-filter-btn" id="reset-filter-btn">
             show all notes
           </button>
         </div>
       </div>
 
-      {/* ── Right Column: Hashtag Search Box ── */}
+      {/* ── Right Column: Tag Search Box ── */}
       <aside class="search-sidebar">
         <div class="search-box">
           <div class="search-box-header">
             <div class="search-label">
-              <span class="prompt">#</span> tag search
+              <span class="prompt">></span> tag search
             </div>
             <span class="match-count" id="match-count">
               {sortedNotes.length} notes
@@ -89,15 +89,29 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
           </div>
 
           <div class="search-input-wrapper">
-            <span class="search-icon">#</span>
+            <svg
+              class="search-icon"
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
             <input
               type="text"
               id="tag-search-input"
               class="tag-search-input"
-              placeholder="search hashtags..."
+              placeholder="search tags..."
               autocomplete="off"
               spellcheck="false"
-              aria-label="Keyword search by hashtags"
+              aria-label="Filter notes by tag"
             />
             <button
               type="button"
@@ -111,7 +125,7 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
           </div>
 
           <div class="tags-section">
-            <div class="tags-section-label">hashtags</div>
+            <div class="tags-section-label">tags</div>
             <div class="tag-chips-list" id="tag-chips-list">
               <button
                 type="button"
@@ -127,7 +141,7 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
                   class="tag-chip"
                   data-tag={tag.toLowerCase()}
                 >
-                  <span class="tag-chip-name">#{tag}</span>
+                  <span class="tag-chip-name">{tag}</span>
                   <span class="tag-chip-count">{count}</span>
                 </button>
               ))}
@@ -141,7 +155,7 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
 
 <style>
   :global(main) {
-    max-width: 980px !important;
+    max-width: 1040px !important;
   }
 
   .notes-container {
@@ -159,7 +173,7 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
 
   .notes-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 250px;
+    grid-template-columns: minmax(0, 1fr) 300px;
     gap: 3rem;
     align-items: start;
   }
@@ -263,32 +277,36 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
   }
 
   .search-box {
-    background: #060906;
-    border: 1px solid var(--border);
+    background: #0d140e;
+    border: 1px solid #233526;
     border-radius: 8px;
-    padding: 1.15rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
-                inset 0 0 15px rgba(118, 185, 0, 0.02);
+    padding: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(164, 226, 52, 0.08);
   }
 
   .search-box-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 0.85rem;
+    align-items: center;
+    margin-bottom: 0.95rem;
   }
 
   .search-label {
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 600;
     color: var(--accent);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .match-count {
-    font-size: 10.5px;
-    color: var(--subtle);
+    font-size: 11px;
+    color: #8da88d;
+    font-weight: 500;
   }
 
   .search-input-wrapper {
@@ -301,33 +319,36 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
   .search-icon {
     position: absolute;
     left: 10px;
-    color: var(--subtle);
-    font-size: 12px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: none;
-    font-family: inherit;
+    opacity: 0.85;
   }
 
   .tag-search-input {
     width: 100%;
-    background: #040604;
-    border: 1px solid var(--border-2);
-    border-radius: 4px;
-    padding: 7px 28px 7px 24px;
+    background: #060a07;
+    border: 1px solid #283a2c;
+    border-radius: 5px;
+    padding: 7px 28px 7px 30px;
     font-family: inherit;
-    font-size: 11.5px;
-    color: var(--text);
+    font-size: 12px;
+    color: var(--heading);
     outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   }
 
   .tag-search-input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 8px rgba(118, 185, 0, 0.2);
+    background: #080e09;
+    box-shadow: 0 0 10px rgba(118, 185, 0, 0.25);
   }
 
   .tag-search-input::placeholder {
-    color: var(--muted);
-    opacity: 0.6;
+    color: #7b947b;
+    opacity: 1;
   }
 
   .clear-search-btn {
@@ -335,7 +356,7 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
     right: 8px;
     background: none;
     border: none;
-    color: var(--muted);
+    color: #8da88d;
     font-size: 11px;
     cursor: pointer;
     padding: 2px 4px;
@@ -348,13 +369,14 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
   }
 
   .tags-section-label {
-    font-size: 10px;
-    color: var(--subtle);
-    letter-spacing: 0.05em;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #8da88d;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    margin-bottom: 0.6rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 0.5px solid #233526;
   }
 
   .tag-chips-list {
@@ -370,37 +392,52 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
     width: 100%;
     background: none;
     border: 0.5px solid transparent;
-    border-radius: 4px;
-    padding: 5px 8px;
+    border-radius: 5px;
+    padding: 6px 9px;
     font-family: inherit;
-    font-size: 11px;
-    color: var(--muted);
+    font-size: 12px;
+    color: #b8ccb8;
     cursor: pointer;
     text-align: left;
     transition: all 0.15s ease;
   }
 
   .tag-chip:hover {
-    color: var(--text);
-    background: rgba(118, 185, 0, 0.05);
-    border-color: var(--border-2);
+    color: var(--accent-bright);
+    background: rgba(118, 185, 0, 0.09);
+    border-color: rgba(118, 185, 0, 0.25);
   }
 
   .tag-chip.active {
     color: var(--accent-bright);
-    background: rgba(118, 185, 0, 0.08);
-    border-color: rgba(118, 185, 0, 0.35);
-    text-shadow: 0 0 3px rgba(164, 226, 52, 0.35);
+    background: rgba(118, 185, 0, 0.14);
+    border-color: rgba(164, 226, 52, 0.45);
+    text-shadow: 0 0 4px rgba(164, 226, 52, 0.35);
+    font-weight: 500;
   }
 
   .tag-chip-count {
-    font-size: 10px;
-    color: var(--subtle);
+    font-size: 11px;
+    color: #7fa37f;
+    background: rgba(255, 255, 255, 0.04);
+    border: 0.5px solid rgba(255, 255, 255, 0.07);
+    padding: 1px 7px;
+    border-radius: 10px;
+    line-height: 1.3;
+    transition: all 0.15s ease;
+  }
+
+  .tag-chip:hover .tag-chip-count {
+    color: var(--accent-bright);
+    background: rgba(118, 185, 0, 0.15);
+    border-color: rgba(118, 185, 0, 0.25);
   }
 
   .tag-chip.active .tag-chip-count {
-    color: var(--accent);
-    opacity: 0.9;
+    color: #ffffff;
+    background: rgba(118, 185, 0, 0.35);
+    border-color: rgba(164, 226, 52, 0.5);
+    font-weight: 600;
   }
 
   .no-results {
@@ -453,7 +490,7 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
     .tag-chip {
       width: auto;
       gap: 8px;
-      border: 0.5px solid var(--border);
+      border: 0.5px solid #233526;
       padding: 4px 10px;
     }
 
