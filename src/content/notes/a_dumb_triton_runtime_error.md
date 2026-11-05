@@ -1,5 +1,5 @@
 ---
-title: "A Dumb Triton Compile Error"
+title: "A Dumb Triton Runtime Error"
 date: 2026-11-05
 description: "A deep dive into Triton's IR verifier, scalar vs. vector pointer types in atomic operations, and kernel reductions."
 tags: [Triton, Python, GPU]
