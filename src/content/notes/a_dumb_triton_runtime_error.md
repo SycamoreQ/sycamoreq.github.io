@@ -48,7 +48,7 @@ def tiled_row_sum_kernel(x_ptr, out_ptr, n_cols, row_stride, col_stride, BLOCK_S
     tl.store(out_ptr + row_idx, row_sum)
 ```
 
-For anybody who knows Triton, this is very straightforward to read—in fact, it was marked `Medium` on TensorTonic, which is pretty ironic. Either way, here is a diagram of the execution to help with both the code and what it does under the hood:
+For anybody who knows Triton, this is very straightforward to read—in fact, it was marked Medium on TensorTonic, which is pretty ironic. Either way, here is a diagram of the execution to help with both the code and what it does under the hood:
 
 ![Step 1: Initialize](/diagrams/triton/step_1.png)
 *Figure 1: Step 1 — Initializing the 1D accumulator vector in registers (`acc = tl.zeros`)*
