@@ -18,7 +18,28 @@ const { note } = Astro.props;
 
 const { Content, headings } = await note.render();
 
-const tocItems = headings.filter((h) => h.depth === 2 || h.depth === 3);
+interface TocGroup {
+  depth: number;
+  slug: string;
+  text: string;
+  children: { depth: number; slug: string; text: string }[];
+}
+
+const tocTree: TocGroup[] = [];
+let currentGroup: TocGroup | null = null;
+
+for (const h of headings) {
+  if (h.depth === 2) {
+    currentGroup = { ...h, children: [] };
+    tocTree.push(currentGroup);
+  } else if (h.depth === 3) {
+    if (currentGroup) {
+      currentGroup.children.push(h);
+    } else {
+      tocTree.push({ ...h, children: [] });
+    }
+  }
+}
 
 const fmt = (date: Date) =>
   date.toLocaleDateString('en-CA', { timeZone: 'UTC' });
@@ -53,14 +74,63 @@ const otherNotes = allNotes
 
   <div class="note-layout">
 
-    <aside class="toc" id="toc">
+    <aside class="toc" id="toc" aria-label="Table of Contents">
       <div class="toc-label">On This Page</div>
-      <nav id="toc-nav">
-        {tocItems.map((h) => (
-          <a href={`#${h.slug}`} class={`toc-link toc-h${h.depth}`}>
-            {h.text}
-          </a>
-        ))}
+      <nav id="toc-nav" class="toc-tree">
+        {tocTree.map((item) => {
+          const hasChildren = item.children.length > 0;
+          return (
+            <div class={`toc-group ${hasChildren ? 'has-children' : ''}`} data-group-slug={item.slug}>
+              <div class="toc-row">
+                {hasChildren ? (
+                  <button
+                    type="button"
+                    class="toc-folder-btn"
+                    aria-label={`Toggle subheadings for ${item.text}`}
+                    title="Toggle subheadings"
+                  >
+                    <svg
+                      class="folder-chevron"
+                      width="8"
+                      height="8"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </button>
+                ) : (
+                  <span class="toc-leaf-dot" aria-hidden="true">·</span>
+                )}
+                <a href={`#${item.slug}`} class="toc-link toc-h2" data-slug={item.slug}>
+                  {item.text}
+                </a>
+              </div>
+
+              {hasChildren && (
+                <div class="toc-children">
+                  {item.children.map((sub) => (
+                    <div class="toc-subrow">
+                      <a
+                        href={`#${sub.slug}`}
+                        class="toc-link toc-h3"
+                        data-slug={sub.slug}
+                        data-parent-slug={item.slug}
+                      >
+                        {sub.text}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </nav>
     </aside>
 
@@ -162,6 +232,17 @@ const otherNotes = allNotes
     width: 230px;
     max-height: calc(100vh - 4rem);
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-2) transparent;
+  }
+
+  .toc::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .toc::-webkit-scrollbar-thumb {
+    background: var(--border-2);
+    border-radius: 2px;
   }
 
   .toc-label {
@@ -175,57 +256,141 @@ const otherNotes = allNotes
     border-bottom: 0.5px solid var(--border);
   }
 
-  .toc nav {
+  .toc-tree {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.15rem;
+    align-items: stretch;
+  }
+
+  .toc-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .toc-row {
+    display: flex;
     align-items: flex-start;
+    width: 100%;
+    gap: 4px;
+    padding: 1px 0;
+  }
+
+  .toc-folder-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 14px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: color 0.15s ease;
+  }
+
+  .toc-folder-btn:hover {
+    color: var(--accent-bright);
+  }
+
+  .folder-chevron {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+    transform: rotate(0deg);
+  }
+
+  .toc-group.is-open > .toc-row .folder-chevron {
+    transform: rotate(90deg);
+    color: var(--accent);
+  }
+
+  .toc-leaf-dot {
+    width: 14px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #2c3a2e;
+    font-size: 13px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 1px;
+    user-select: none;
   }
 
   .toc-link {
     color: var(--muted);
-    font-size: 12px;
-    padding: 3px 0 3px 0.75rem;
-    line-height: 1.4;
+    font-size: 11.5px;
+    line-height: 1.35;
     display: block;
-    width: 100%;
+    flex: 1;
     text-decoration: none;
-    border-left: 2px solid transparent;
-    opacity: 0.65; 
     transition: all 0.15s ease;
     overflow-wrap: break-word;
     word-break: break-word;
+    opacity: 0.7;
+    padding: 1px 0;
   }
 
-  .toc-link:hover,
+  .toc-link:hover {
+    color: var(--accent-bright);
+    opacity: 1;
+  }
+
   .toc-link.active {
     color: var(--accent-bright);
-    opacity: 1; 
-    border-left-color: var(--accent);
+    opacity: 1;
+    font-weight: 500;
     text-shadow: 0 0 4px rgba(164, 226, 52, 0.4);
   }
 
-  .toc-h2:hover,
-  .toc-h2.active {
-    color: var(--accent-bright);
-    border-left-color: var(--accent);
-    text-shadow: 0 0 4px rgba(164, 226, 52, 0.4);
+  .toc-group.has-active-child > .toc-row .toc-h2 {
+    color: var(--text);
+    opacity: 0.95;
+  }
+
+  .toc-children {
+    margin-left: 6px;
+    padding-left: 10px;
+    border-left: 1px solid #1a271c;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: max-height 0.25s cubic-bezier(0, 1, 0, 1), opacity 0.2s ease, visibility 0.2s;
+  }
+
+  .toc-group.is-open > .toc-children {
+    max-height: 500px;
+    opacity: 1;
+    visibility: visible;
+    transition: max-height 0.3s ease-in-out, opacity 0.25s ease;
+  }
+
+  .toc-subrow {
+    padding: 2px 0;
   }
 
   .toc-h3 {
-    margin-left: 2px;
-    padding-left: 1.35rem;
     font-size: 11px;
-    opacity: 0.85;
-    border-left: 2px solid var(--border);
+    color: #7b947b;
+    opacity: 0.8;
   }
 
-  .toc-h3:hover,
+  .toc-h3:hover {
+    color: var(--accent-bright);
+    opacity: 1;
+  }
+
   .toc-h3.active {
     color: var(--accent-bright);
-    border-left-color: var(--accent-bright);
-    text-shadow: 0 0 4px rgba(164, 226, 52, 0.4);
     opacity: 1;
+    font-weight: 500;
+    text-shadow: 0 0 4px rgba(164, 226, 52, 0.4);
   }
 
   .note-main {
@@ -335,10 +500,10 @@ const otherNotes = allNotes
 
   .prose :global(img) {
     display: block;
-    max-width: min(100%, 580px);
+    max-width: min(100%, 680px);
     width: auto;
     height: auto;
-    margin: 2rem auto;
+    margin: 2rem auto 0.5rem auto;
     border-radius: 6px;
     border: 1px solid var(--border);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
@@ -346,7 +511,36 @@ const otherNotes = allNotes
 
   .prose :global(p:has(> img)) {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose :global(figure) {
+    margin: 2rem auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .prose :global(figure img) {
+    margin: 0 auto 0.5rem auto;
+  }
+
+  .prose :global(figcaption),
+  .prose :global(.caption),
+  .prose :global(p:has(> img) > em),
+  .prose :global(p:has(> img) + p:has(> em:only-child)),
+  .prose :global(p:has(> img) + p > em:only-child) {
+    font-size: 11.5px;
+    color: #8da48d;
+    text-align: center;
+    display: block;
+    line-height: 1.5;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-style: normal;
   }
 
   .note-ref-link {
@@ -538,72 +732,119 @@ const otherNotes = allNotes
 </style>
 
 <script>
-  function setupActiveHighlight() {
-    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc-link'));
-    const items = links
+  function setupTocDropdown() {
+    const groups = Array.from(document.querySelectorAll<HTMLElement>('.toc-group'));
+    const allLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc-link'));
+    const toggleBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('.toc-folder-btn'));
+
+    if (allLinks.length === 0) return;
+
+    const linkHeadingPairs = allLinks
       .map((link) => {
         const href = link.getAttribute('href');
         if (!href || !href.startsWith('#')) return null;
         const id = decodeURIComponent(href.slice(1));
         const heading = document.getElementById(id);
-        return heading ? { link, heading } : null;
+        return heading ? { link, heading, slug: id } : null;
       })
-      .filter((item): item is { link: HTMLAnchorElement; heading: HTMLElement } => item !== null);
+      .filter((item): item is { link: HTMLAnchorElement; heading: HTMLElement; slug: string } => item !== null);
 
-    if (items.length === 0) return;
+    if (linkHeadingPairs.length === 0) return;
 
-    function setActive(activeLink: HTMLAnchorElement | null) {
-      links.forEach((l) => l.classList.remove('active'));
-      if (activeLink) {
-        activeLink.classList.add('active');
-      }
+    // Toggle button click handler (folder chevron)
+    toggleBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const group = btn.closest('.toc-group');
+        if (group) {
+          group.classList.toggle('is-open');
+        }
+      });
+    });
+
+    // Clicking an H2 link that has subheadings unfolds its folder
+    allLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        const group = link.closest('.toc-group');
+        if (group && group.classList.contains('has-children')) {
+          group.classList.add('is-open');
+        }
+      });
+    });
+
+    function updateActiveState(activePair: { link: HTMLAnchorElement; heading: HTMLElement; slug: string }) {
+      allLinks.forEach((l) => l.classList.remove('active'));
+      activePair.link.classList.add('active');
+
+      const activeSlug = activePair.slug;
+      const isH3 = activePair.link.classList.contains('toc-h3');
+      const parentSlug = activePair.link.dataset.parentSlug;
+
+      groups.forEach((group) => {
+        const groupSlug = group.dataset.groupSlug;
+        const isCurrentGroup = groupSlug === activeSlug || (isH3 && groupSlug === parentSlug);
+
+        if (isCurrentGroup) {
+          if (group.classList.contains('has-children')) {
+            group.classList.add('is-open');
+          }
+          if (isH3) {
+            group.classList.add('has-active-child');
+          } else {
+            group.classList.remove('has-active-child');
+          }
+        } else {
+          group.classList.remove('is-open');
+          group.classList.remove('has-active-child');
+        }
+      });
     }
 
-    function updateHighlight() {
+    function onScrollUpdate() {
       const scrollY = window.scrollY || window.pageYOffset;
       const viewportHeight = window.innerHeight;
       const docHeight = document.documentElement.scrollHeight;
 
-      // If user is at or very near the bottom of the page, activate the last item!
       if (scrollY + viewportHeight >= docHeight - 80) {
-        setActive(items[items.length - 1].link);
+        updateActiveState(linkHeadingPairs[linkHeadingPairs.length - 1]);
         return;
       }
 
-      // Check headings in document order with trigger threshold 140px from top
       const triggerOffset = 140;
-      let activeItem = items[0];
+      let currentActive = linkHeadingPairs[0];
 
-      for (let i = 0; i < items.length; i++) {
-        const rect = items[i].heading.getBoundingClientRect();
+      for (let i = 0; i < linkHeadingPairs.length; i++) {
+        const rect = linkHeadingPairs[i].heading.getBoundingClientRect();
         if (rect.top <= triggerOffset) {
-          activeItem = items[i];
+          currentActive = linkHeadingPairs[i];
         } else {
           break;
         }
       }
 
-      setActive(activeItem.link);
+      updateActiveState(currentActive);
     }
 
     let ticking = false;
-    function onScroll() {
+    function requestTick() {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          updateHighlight();
+          onScrollUpdate();
           ticking = false;
         });
         ticking = true;
       }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-    updateHighlight();
+    window.addEventListener('scroll', requestTick, { passive: true });
+    window.addEventListener('resize', requestTick, { passive: true });
+
+    onScrollUpdate();
   }
 
-  setupActiveHighlight();
-  document.addEventListener('astro:page-load', setupActiveHighlight);
+  setupTocDropdown();
+  document.addEventListener('astro:page-load', setupTocDropdown);
 
   function setupOtherNotesSlider() {
     const slider = document.getElementById('other-notes-slider');

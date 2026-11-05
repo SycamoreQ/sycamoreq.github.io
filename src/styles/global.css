@@ -528,13 +528,46 @@ main:has(.prose) {
 /* Images in markdown */
 .prose img {
   display: block;
-  max-width: min(100%, 580px);
+  max-width: min(100%, 680px);
   width: auto;
   height: auto;
-  margin: 2rem auto;
+  margin: 2rem auto 0.5rem auto;
   border-radius: 6px;
   border: 1px solid var(--border);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.prose p:has(> img) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.prose figure {
+  margin: 2rem auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.prose figure img {
+  margin: 0 auto 0.65rem auto;
+}
+
+.prose figcaption,
+.prose .caption,
+.prose p:has(> img) > em,
+.prose p:has(> img) + p:has(> em:only-child) {
+  font-size: 11.5px;
+  color: var(--muted);
+  text-align: center;
+  display: block;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-style: normal;
 }
 
 /* Tables in markdown */
@@ -744,24 +777,6 @@ main:has(.prose) {
   }
 }
 
-.now-meta {
-  font-size: 11px;
-  color: var(--subtle);
-  margin-bottom: 3rem;
-  max-width: none;
-}
-
-.now-meta a {
-  border-bottom: 0.5px solid var(--border);
-  color: var(--subtle);
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-.now-meta a:hover { 
-  color: var(--accent-bright); 
-}
-
 .now-block {
   margin-bottom: 3.5rem; 
 }
@@ -802,6 +817,17 @@ main:has(.prose) {
   color: var(--accent); 
   font-weight: bold;
   opacity: 0.8;
+}
+
+.now-list a {
+  color: var(--text);
+  border-bottom: 0.5px solid var(--border-2);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.now-list a:hover {
+  color: var(--accent-bright);
+  border-bottom-color: var(--accent);
 }
 
 .now-item-name {
